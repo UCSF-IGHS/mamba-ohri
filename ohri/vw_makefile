@@ -1,0 +1,5 @@
+base/views/vw_odk_form_cqi_checklist.sql
+base/views/vw_odk_form_cqi_shortened_checklist.sql
+base/views/vw_odk_form_cqi_action_plans.sql
+base/views/vw_cqi_action_plans_history.sql
+# base/views/vw_base_fact_hts_emr_distinct.sql
