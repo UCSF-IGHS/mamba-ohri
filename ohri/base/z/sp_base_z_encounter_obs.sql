@@ -51,4 +51,12 @@ UPDATE base.z_encounter_obs z
         ON e.external_encounter_type_id = et.external_encounter_type_id
 SET  z.encounter_type_uuid = et.encounter_type_uuid;
 
+-- Update Key pop types to Yes/No (in Z Table)
+UPDATE base.z_encounter_obs z
+    INNER JOIN base.concept_metadata cm
+        ON cm.concept_uuid= z.obs_value_coded_uuid
+SET z.obs_value_text = IF (z.obs_value_coded IS NOT NULL, 'Yes', 'No')
+WHERE
+    cm.column_number in (7, 8, 9 , 10);
+
 -- $END
