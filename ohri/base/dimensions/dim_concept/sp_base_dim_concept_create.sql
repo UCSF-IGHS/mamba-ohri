@@ -1,11 +1,10 @@
 USE analysis;
-GO
 
-DROP TABLE IF EXISTS  base.concept;
+DROP TABLE IF EXISTS  base_dim_concept;
 
 -- $BEGIN
 
-CREATE TABLE base.concept (
+CREATE TABLE base_dim_concept (
     concept_id int NOT NULL AUTO_INCREMENT,
     uuid CHAR(38) NOT NULL,
     external_concept_id int,

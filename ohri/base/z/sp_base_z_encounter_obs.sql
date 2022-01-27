@@ -1,5 +1,4 @@
 USE analysis;
-GO
 
 DROP TABLE IF EXISTS base.z_encounter_obs;
 

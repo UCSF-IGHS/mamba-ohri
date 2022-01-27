@@ -1,11 +1,10 @@
 USE analysis;
-GO
 
-DROP TABLE IF EXISTS  base.encounter;
+DROP TABLE IF EXISTS  base_dim_encounter;
 
 -- $BEGIN
 
-CREATE TABLE base_encounter (
+CREATE TABLE base_dim_encounter (
     encounter_id int NOT NULL AUTO_INCREMENT,
     external_encounter_id int,
     external_encounter_type_id int,

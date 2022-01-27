@@ -1,11 +1,11 @@
 USE analysis;
-GO
 
-TRUNCATE TABLE base.concept_metadata;
+
+TRUNCATE TABLE base_dim_concept_metadata;
 
 -- $BEGIN
 
-INSERT INTO base.concept_metadata (
+INSERT INTO base_dim_concept_metadata (
     column_number,
     column_label,
     concept_uuid

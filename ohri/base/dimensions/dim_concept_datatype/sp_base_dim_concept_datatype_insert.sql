@@ -1,11 +1,10 @@
 USE analysis;
-GO
 
-TRUNCATE TABLE base.concept_datatype;
+TRUNCATE TABLE base_dim_concept_datatype;
 
 -- $BEGIN
 
-INSERT INTO base.concept_datatype (
+INSERT INTO base_dim_concept_datatype (
     external_datatype_id,
     datatype
 )
@@ -13,7 +12,7 @@ SELECT
     dt.concept_datatype_id AS external_datatype_id,
     dt.name AS datatype
 FROM
-    [external].concept_datatype dt
+    openmrs_working.concept_datatype dt
 WHERE
     dt.retired = 0;
 

@@ -1,11 +1,10 @@
 USE analysis;
-GO
 
-DROP TABLE IF EXISTS  base.concept_metadata;
+DROP TABLE IF EXISTS  base_dim_concept_metadata;
 
 -- $BEGIN
 
-CREATE TABLE base_concept_metadata (
+CREATE TABLE base_dim_concept_metadata (
     concept_metadata_id int NOT NULL AUTO_INCREMENT,
     column_number int,
     column_label NVARCHAR(50) NOT NULL,
