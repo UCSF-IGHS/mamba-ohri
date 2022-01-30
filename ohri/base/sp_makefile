@@ -1,3 +1,5 @@
+../functions/fn_get_obs_value_column.sql
+
 dimensions/dim_concept_datatype/sp_base_dim_concept_datatype_create.sql
 dimensions/dim_concept_datatype/sp_base_dim_concept_datatype_insert.sql
 dimensions/dim_concept_datatype/sp_base_dim_concept_datatype.sql

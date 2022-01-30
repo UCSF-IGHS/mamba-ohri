@@ -19,6 +19,8 @@ SELECT o.encounter_id   AS encounter_id,
        o.value_numeric  AS obs_value_numeric,
        o.value_coded    AS obs_value_coded,
        o.value_datetime AS obs_value_datetime,
+       o.value_complex  AS obs_value_complex,
+       o.value_drug     AS obs_value_drug,
        NULL             AS obs_question_uuid,
        NULL             AS obs_answer_uuid,
        NULL             AS obs_value_coded_uuid,
@@ -67,6 +69,13 @@ UPDATE base_z_encounter_obs z
     INNER JOIN base_dim_concept_metadata cm
     ON cm.concept_uuid = z.obs_value_coded_uuid
 SET z.obs_value_text = IF(z.obs_value_coded IS NOT NULL, 'Yes', 'No')
-WHERE cm.column_number in (7, 8, 9, 10);
+WHERE cm.column_number in (7, 8, 9, 10, 11, 12, 13, 14,15,16,17,18);
+
+
+SELECT * FROM base_z_encounter_obs z
+    INNER JOIN base_dim_concept_metadata cm
+    ON cm.concept_uuid = z.obs_question_uuid
+-- SET z.obs_value_text = IF(z.obs_value_coded IS NOT NULL, 'Yes', 'No')
+WHERE cm.column_number in (7, 8, 9, 10, 11, 12, 13, 14);
 
 -- $END
