@@ -184,7 +184,7 @@ $sp_body
 --
 
 DROP PROCEDURE IF EXISTS $sp_name;
-delimiter //
+DELIMITER //
 CREATE PROCEDURE $sp_name()
 BEGIN
 

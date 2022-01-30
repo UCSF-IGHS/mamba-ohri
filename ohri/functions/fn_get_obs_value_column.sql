@@ -1,3 +1,4 @@
+DELIMITER //
 
 DROP FUNCTION IF EXISTS fn_get_obs_value_column;
 
@@ -15,4 +16,6 @@ BEGIN
     END IF;
 
     RETURN (obsValueColumn);
-END;
+END//
+
+DELIMITER ;

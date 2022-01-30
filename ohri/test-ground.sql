@@ -323,8 +323,6 @@ DEALLOCATE PREPARE stmt;
 
 
 -- TRIAL THREE --
-
-
 SET session group_concat_max_len = 20000; -- to prevent truncating of group_concat results Rd: https://logic.edchen.org/how-to-resolve-returned-string-that-was-truncated-by-mysql/
 SET @sql := NULL;
 SET @encounter_type_uuid = '79c1f50f-f77d-42e2-ad2a-d29304dde2fe';
