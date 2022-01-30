@@ -115,13 +115,13 @@ clear_message="No objects to clean out."
 clear_objects_sql=""
 if [ "$objects_to_clear" == "all" ]; then
     clear_message="clearing all objects in $schema_name"
-    clear_objects_sql="EXEC dbo.sp_xf_system_drop_all_objects_in_schema '$schema_name' "
+    clear_objects_sql="CALL dbo.sp_xf_system_drop_all_objects_in_schema '$schema_name' "
 elif [ "$objects_to_clear" == "sp" ]; then
     clear_message="clearing all stored procedures in $schema_name"
-    clear_objects_sql="EXEC dbo.sp_xf_system_drop_all_stored_procedures_in_schema '$schema_name' "
+    clear_objects_sql="CALL dbo.sp_xf_system_drop_all_stored_procedures_in_schema '$schema_name' "
 elif [ "$objects_to_clear" == "views" ] || [ "$objects_to_clear" == "view" ] || [ "$objects_to_clear" == "v" ]; then
     clear_message="clearing all views in $schema_name"
-    clear_objects_sql="EXEC dbo.sp_xf_system_drop_all_views_in_schema '$schema_name' "
+    clear_objects_sql="CALL dbo.sp_xf_system_drop_all_views_in_schema '$schema_name' "
 fi
 
 if [ -n "$stored_procedures" ]
@@ -134,11 +134,10 @@ then
     BUILD_DIR="$WORKING_DIR/build"
     create_directory_if_absent "$BUILD_DIR"
 
-    all_stored_procedures="USE $database
-GO
-PRINT '$clear_message'
+    all_stored_procedures="USE $database;
+
 $clear_objects_sql
-GO
+
 "
 
     if [ ! -n "$database" ]
@@ -170,33 +169,30 @@ GO
               sp_body=`cat $WORKING_DIR/$file_path`
               sp_create_statement="
 
------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------
 -- $sp_name
 --
-
-PRINT 'Creating $schema.$sp_name'
-GO
 
 $sp_body
 
-GO"
+"
         else
             sp_create_statement="
 
------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------
 -- $sp_name
 --
 
-PRINT 'Creating $schema.$sp_name'
-GO
-
-CREATE OR ALTER PROCEDURE $schema.$sp_name AS
+DROP PROCEDURE IF EXISTS $sp_name;
+delimiter //
+CREATE PROCEDURE $sp_name()
 BEGIN
 
 $sp_body
 
 END
-GO"
+//
+"
         fi
 
         all_stored_procedures="$all_stored_procedures
@@ -216,11 +212,10 @@ then
     BUILD_DIR="$WORKING_DIR/build"
     create_directory_if_absent "$BUILD_DIR"
 
-    views_body="USE $database
-GO
-PRINT '$clear_message'
+    views_body="USE $database ;
+
 $clear_objects_sql
-GO
+
 "
     if [ ! -n "$database" ]
     then
@@ -246,18 +241,18 @@ GO
 
         vw_header="
 
------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------
 -- $vw_name
 --
 
-CREATE OR ALTER VIEW $schema.$vw_name AS
+CREATE OR ALTER VIEW $vw_name AS
 "
 
 views_body="$views_body
 $vw_header
 $vw_body
 
-GO"
+"
 
     done
 

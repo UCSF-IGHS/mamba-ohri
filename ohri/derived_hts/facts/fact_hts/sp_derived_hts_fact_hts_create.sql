@@ -1,12 +1,12 @@
 USE analysis;
 
 
-DROP TABLE IF EXISTS derived_hts.fact_hts;
+DROP TABLE IF EXISTS derived_hts_fact_hts;
 
 -- $BEGIN
 
-CREATE TABLE derived_hts.fact_hts (
-    fact_hts_id UNIQUEIDENTIFIER NOT NULL,
+CREATE TABLE derived_hts_fact_hts (
+    fact_hts_id int NOT NULL AUTO_INCREMENT,
     encounter_id int, 
     client_id int,
     test_setting NVARCHAR(255), 
@@ -15,8 +15,8 @@ CREATE TABLE derived_hts.fact_hts (
     hts_approach NVARCHAR(255), 
     pop_type NVARCHAR(255), 
     key_pop_type NVARCHAR(255), 
-    key_pop_migrant_worker NVARCHAR(255)
+    key_pop_migrant_worker NVARCHAR(255),
+    PRIMARY KEY (fact_hts_id)
 );
-ALTER TABLE [derived_hts].fact_hts ADD CONSTRAINT PK_fact_hts_id PRIMARY KEY ([fact_hts_id]);
 
 -- $END

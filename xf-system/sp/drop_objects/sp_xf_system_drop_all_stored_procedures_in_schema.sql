@@ -16,7 +16,7 @@ BEGIN
     ORDER BY
         c.[type];
 
-    EXEC(@SQL)
+    CALL(@SQL)
     PRINT 'Dropped all stored procedures in schema: ' + @schema
 
 END

@@ -1,4 +1,4 @@
-USE recency_uganda_prod_analysis_test;
+USE analysis;
 
 
 -- $BEGIN

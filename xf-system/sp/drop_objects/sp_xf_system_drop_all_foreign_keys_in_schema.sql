@@ -18,7 +18,7 @@ BEGIN
     ORDER BY
     c.[type];
 
-    EXEC(@SQL)
+    CALL(@SQL)
     PRINT @SQL
     PRINT N'Dropped all FKs in schema: ' + @schema
 
