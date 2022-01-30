@@ -7,6 +7,10 @@ dimensions/dim_concept/sp_base_dim_concept_insert.sql
 dimensions/dim_concept/sp_base_dim_concept_update.sql
 dimensions/dim_concept/sp_base_dim_concept.sql
 
+dimensions/dim_concept/sp_base_dim_concept_answer_create.sql
+dimensions/dim_concept/sp_base_dim_concept_answer_insert.sql
+dimensions/dim_concept/sp_base_dim_concept_answer.sql
+
 dimensions/dim_concept_name/sp_base_dim_concept_name_create.sql
 dimensions/dim_concept_name/sp_base_dim_concept_name_insert.sql
 dimensions/dim_concept_name/sp_base_dim_concept_name.sql
@@ -24,3 +28,6 @@ dimensions/dim_metadata/sp_base_dim_concept_metadata_create.sql
 dimensions/dim_metadata/sp_base_dim_concept_metadata_insert.sql
 dimensions/dim_metadata/sp_base_dim_concept_metadata_update.sql
 dimensions/dim_metadata/sp_base_dim_concept_metadata.sql
+
+z/sp_base_z_encounter_obs.sql
+z/sp_base_z_tables.sql

@@ -1,5 +1,5 @@
 USE analysis;
-GO
+
 
 DROP TABLE IF EXISTS derived_hts.fact_hts;
 

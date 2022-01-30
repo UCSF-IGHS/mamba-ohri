@@ -5,11 +5,13 @@ DROP TABLE IF EXISTS  base_dim_concept_metadata;
 -- $BEGIN
 
 CREATE TABLE base_dim_concept_metadata (
-    concept_metadata_id int NOT NULL AUTO_INCREMENT,
-    column_number int,
+    concept_metadata_id INT NOT NULL AUTO_INCREMENT,
+    column_number INT,
     column_label NVARCHAR(50) NOT NULL,
     concept_uuid CHAR(38) NOT NULL,
-    concept_data_type NVARCHAR(255) NULL,
+    concept_datatype NVARCHAR(255) NULL,
+    report_name NVARCHAR(255) NOT NULL,
+    concept_answer_obs TINYINT(1)NOT NULL DEFAULT 0,
     PRIMARY KEY (concept_metadata_id)
 );
 

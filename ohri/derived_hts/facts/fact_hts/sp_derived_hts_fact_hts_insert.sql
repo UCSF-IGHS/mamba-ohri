@@ -1,5 +1,5 @@
 USE analysis;
-GO
+
 
 TRUNCATE TABLE derived_hts.fact_hts;
 
