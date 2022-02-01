@@ -22,19 +22,19 @@ SELECT
                         WHEN ''Date'' THEN eo.obs_value_datetime
                         WHEN ''Numeric'' THEN eo.obs_value_numeric
                END)
-            FROM base_z_encounter_obs eo
-                INNER JOIN base_dim_concept_metadata cm ON IF(cm.concept_answer_obs=1, cm.concept_uuid=eo.obs_value_coded_uuid, cm.concept_uuid=eo.obs_question_uuid)
+            FROM mamba_z_encounter_obs eo
+                INNER JOIN mamba_dim_concept_metadata cm ON IF(cm.concept_answer_obs=1, cm.concept_uuid=eo.obs_value_coded_uuid, cm.concept_uuid=eo.obs_question_uuid)
             WHERE eo.encounter_id = o.encounter_id
                 AND cm.column_label = ''', column_label, '''
             ORDER BY eo.obs_datetime DESC
             LIMIT 1) AS ''', column_label, ''' ')) INTO @sub_select_sql
-FROM base_dim_concept_metadata
+FROM mamba_dim_concept_metadata
     WHERE report_name = @report_name;
 
 SET @sql = CONCAT(
         'SELECT o.encounter_id, o.person_id AS client_id,
             ', @sub_select_sql, '
-        FROM base_z_encounter_obs o
+        FROM mamba_z_encounter_obs o
         WHERE o.encounter_type_uuid IN (''', @encounter_type_uuid, ''')
         GROUP BY o.encounter_id');
 PREPARE stmt FROM @sql;
@@ -52,18 +52,18 @@ SET @report_name = 'fact_hts';
 SELECT
      GROUP_CONCAT(
         CONCAT('(SELECT ',fn_get_obs_value_column(concept_datatype), '
-            FROM base_z_encounter_obs eo
-                INNER JOIN base_dim_concept_metadata cm ON IF(cm.concept_answer_obs=1, cm.concept_uuid=eo.obs_value_coded_uuid, cm.concept_uuid=eo.obs_question_uuid)
+            FROM mamba_z_encounter_obs eo
+                INNER JOIN mamba_dim_concept_metadata cm ON IF(cm.concept_answer_obs=1, cm.concept_uuid=eo.obs_value_coded_uuid, cm.concept_uuid=eo.obs_question_uuid)
             WHERE eo.encounter_id = o.encounter_id
                 AND cm.column_label = ''', column_label, '''
             ORDER BY eo.obs_datetime DESC
             LIMIT 1) AS ''', column_label, ''' ')) INTO @sub_select_sql
-FROM base_dim_concept_metadata
+FROM mamba_dim_concept_metadata
     WHERE report_name = @report_name;
 
 SET @sql = CONCAT(
         'SELECT o.encounter_id, o.person_id AS client_id, ', @sub_select_sql, '
-        FROM base_z_encounter_obs o
+        FROM mamba_z_encounter_obs o
         WHERE o.encounter_type_uuid IN (''', @encounter_type_uuid, ''')
         GROUP BY o.encounter_id');
 PREPARE stmt FROM @sql;
@@ -90,13 +90,13 @@ SELECT
   GROUP_CONCAT(DISTINCT
     CONCAT(' MAX(CASE WHEN column_label = ''', column_label, ''' THEN ', @obs_check, ' END) ', column_label)
   ) INTO @sql
-FROM base_dim_concept_metadata
+FROM mamba_dim_concept_metadata
     WHERE report_name = @report_name;;
 
 SET @sql = CONCAT(
         'SELECT eo.encounter_id, eo.person_id AS client_id, ', @sql, '
-        FROM base_z_encounter_obs eo
-            INNER JOIN base_dim_concept_metadata cm ON IF(cm.concept_answer_obs=1, cm.concept_uuid=eo.obs_value_coded_uuid, cm.concept_uuid=eo.obs_question_uuid)
+        FROM mamba_z_encounter_obs eo
+            INNER JOIN mamba_dim_concept_metadata cm ON IF(cm.concept_answer_obs=1, cm.concept_uuid=eo.obs_value_coded_uuid, cm.concept_uuid=eo.obs_question_uuid)
         WHERE eo.encounter_type_uuid = ''', @encounter_type_uuid, '''
         GROUP BY eo.encounter_id');
 PREPARE stmt FROM @sql;
@@ -119,13 +119,13 @@ DEALLOCATE PREPARE stmt;
       GROUP_CONCAT(DISTINCT
         CONCAT(' MAX(CASE WHEN column_label = ''', column_label, ''' THEN ', fn_get_obs_value_column(concept_datatype), ' END) ', column_label)
       ) INTO @sql
-    FROM base_dim_concept_metadata
+    FROM mamba_dim_concept_metadata
         WHERE report_name = @report_name;;
 
     SET @create_table = CONCAT(
             'CREATE TABLE `', @output_table_name ,'` SELECT eo.encounter_id, eo.person_id AS client_id, ', @sql, '
-            FROM base_z_encounter_obs eo
-                INNER JOIN base_dim_concept_metadata cm ON IF(cm.concept_answer_obs=1, cm.concept_uuid=eo.obs_value_coded_uuid, cm.concept_uuid=eo.obs_question_uuid)
+            FROM mamba_z_encounter_obs eo
+                INNER JOIN mamba_dim_concept_metadata cm ON IF(cm.concept_answer_obs=1, cm.concept_uuid=eo.obs_value_coded_uuid, cm.concept_uuid=eo.obs_question_uuid)
             WHERE eo.encounter_type_uuid = ''', @encounter_type_uuid, '''
             GROUP BY eo.encounter_id;');
 
@@ -145,3 +145,5 @@ DEALLOCATE PREPARE stmt;
 -- Add extra param to capture table_name
 -- Create procedure to call above code
 
+
+UPDATE fact_hts SET @column_label=IF(@column_label IS NULL OR '', new_value_if_false, new_value_if_true);

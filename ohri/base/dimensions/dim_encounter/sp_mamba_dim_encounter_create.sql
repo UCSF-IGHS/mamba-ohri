@@ -1,10 +1,10 @@
 USE analysis;
 
-DROP TABLE IF EXISTS  base_dim_encounter;
+DROP TABLE IF EXISTS  mamba_dim_encounter;
 
 -- $BEGIN
 
-CREATE TABLE base_dim_encounter (
+CREATE TABLE mamba_dim_encounter (
     encounter_id int NOT NULL AUTO_INCREMENT,
     external_encounter_id int,
     external_encounter_type_id int,
