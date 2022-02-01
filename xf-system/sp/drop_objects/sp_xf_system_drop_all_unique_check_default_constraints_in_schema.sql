@@ -21,7 +21,7 @@ BEGIN
     ORDER BY
     c.[type];
 
-    EXEC(@SQL)
+    CALL(@SQL)
     PRINT @SQL
     PRINT N'Dropped all Unique constraints, Check constraints and Default constraints in schema: ' + @schema
 

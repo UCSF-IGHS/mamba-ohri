@@ -10,7 +10,7 @@ BEGIN
     WHILE @name IS NOT NULL
     BEGIN
         SELECT @SQL = 'DROP TABLE [' + @schema + '].[' + RTRIM(@name) +']'
-        EXEC (@SQL)
+        CALL (@SQL)
         PRINT 'Dropped table: ' + @name
         SELECT @name = (SELECT TOP 1 [name] FROM sys.objects WHERE [type] = 'U' AND SCHEMA_NAME(schema_id) = @schema AND [name] > @name ORDER BY [name])
     END
