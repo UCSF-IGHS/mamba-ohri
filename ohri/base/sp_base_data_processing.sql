@@ -1,69 +1,33 @@
 USE analysis;
 
-
 -- $BEGIN
- 
- PRINT 'Starting execution of Base Objects'
 
- --Drop foreign key constraints
- PRINT 'Dropping foreign keys'
- CALL dbo.sp_xf_system_drop_all_foreign_keys_in_schema 'base'
+-- SELECT 'Starting execution of Base Objects';
 
- PRINT 'Dropping tables'
- CALL dbo.sp_xf_system_drop_all_tables_in_schema 'base'
+-- Base dimensions
+-- SELECT 'Executing sp_base_dim_concept_datatype';
+CALL sp_base_dim_concept_datatype;
 
- 
--- Base dimensions and facts
+-- SELECT 'Executing sp_base_dim_concept_answer';
+CALL sp_base_dim_concept_answer;
 
-PRINT 'Executing sp_dim_date'
-CALL base.sp_dim_date;
+-- SELECT 'Executing sp_base_dim_concept_name';
+CALL sp_base_dim_concept_name;
 
-PRINT 'Executing sp_dim_implementing_mechanism'
-CALL base.sp_dim_implementing_mechanism;
+-- SELECT 'Executing sp_base_dim_concept';
+CALL sp_base_dim_concept;
 
-PRINT 'Executing sp_dim_location'
-CALL base.sp_dim_location;
+-- SELECT 'Executing sp_base_dim_encounter_type';
+CALL sp_base_dim_encounter_type;
 
-PRINT 'Executing sp_dim_facility'
-CALL base.sp_dim_facility;
+-- SELECT 'Executing sp_base_dim_encounter';
+CALL sp_base_dim_encounter;
 
-PRINT 'Executing sp_dim_hts_client'
-CALL base.sp_dim_hts_client;
+-- SELECT 'Executing sp_base_dim_concept_metadata';
+CALL sp_base_dim_concept_metadata;
 
-PRINT 'Executing sp_dim_uvri_client'
-CALL base.sp_dim_uvri_client;
-
-PRINT 'Executing sp_dim_hub'
-CALL base.sp_dim_hub;
-
-PRINT 'Executing sp_dim_cqi_category'
-CALL base.sp_dim_cqi_category;
-
-PRINT 'Executing sp_dim_cqi_indicator'
-CALL base.sp_dim_cqi_indicator;
-
-PRINT 'Executing sp_dim_cqi_action_plan_assessment'
-CALL base.sp_dim_cqi_action_plan_assessment;
-
-PRINT 'Executing sp_fact_hts_emr'
-CALL base.sp_fact_hts_emr;
-
-PRINT 'Executing sp_fact_uvri_recency_result'
-CALL base.sp_fact_uvri_recency_result;
-
-PRINT 'Executing sp_fact_cqi_assessment'
-CALL base.sp_fact_cqi_assessment;
-
-PRINT 'Executing sp_fact_cqi_shortened_assessment'
-CALL base.sp_fact_cqi_shortened_assessment;
-
-PRINT 'Executing sp_fact_cqi_assessment_merged'
-CALL base.sp_fact_cqi_assessment_merged;
-
-PRINT 'Executing sp_fact_cqi_action_plan'
-CALL base.sp_fact_cqi_action_plan;
-
-PRINT 'Executing sp_fact_cqi_action_plan_followup'
-CALL base.sp_fact_cqi_action_plan_followup;
+-- Base Objects
+-- SELECT 'Executing sp_base_z_tables';
+CALL sp_base_z_tables;
 
 -- $END

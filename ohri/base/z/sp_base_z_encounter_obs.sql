@@ -69,7 +69,7 @@ UPDATE base_z_encounter_obs z
     INNER JOIN base_dim_concept_metadata cm
     ON cm.concept_uuid = z.obs_value_coded_uuid
 SET z.obs_value_text = IF(z.obs_value_coded IS NOT NULL, 'Yes', 'No')
-WHERE cm.column_number in (7, 8, 9, 10, 11, 12, 13, 14,15,16,17,18);
+WHERE cm.column_number in (7, 8, 9, 10, 11, 12, 13, 14,15,16,17,18, 19);
 
 
 SELECT * FROM base_z_encounter_obs z

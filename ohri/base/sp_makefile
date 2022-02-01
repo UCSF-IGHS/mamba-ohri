@@ -31,5 +31,7 @@ dimensions/dim_metadata/sp_base_dim_concept_metadata_insert.sql
 dimensions/dim_metadata/sp_base_dim_concept_metadata_update.sql
 dimensions/dim_metadata/sp_base_dim_concept_metadata.sql
 
-z/sp_base_z_encounter_obs.sql
-z/sp_base_z_tables.sql
+#z/sp_base_z_encounter_obs.sql
+#z/sp_base_z_tables.sql
+
+#sp_base_data_processing.sql

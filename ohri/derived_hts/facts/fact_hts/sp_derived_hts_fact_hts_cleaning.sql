@@ -5,6 +5,4 @@ USE analysis;
 
 -- Update with Yes/No values
 
-
-
 -- $END
