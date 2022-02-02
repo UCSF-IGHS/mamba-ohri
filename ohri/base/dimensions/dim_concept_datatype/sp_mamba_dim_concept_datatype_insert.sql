@@ -1,10 +1,10 @@
 USE analysis;
 
-TRUNCATE TABLE base_dim_concept_datatype;
+TRUNCATE TABLE mamba_dim_concept_datatype;
 
 -- $BEGIN
 
-INSERT INTO base_dim_concept_datatype (
+INSERT INTO mamba_dim_concept_datatype (
     external_datatype_id,
     datatype_name
 )

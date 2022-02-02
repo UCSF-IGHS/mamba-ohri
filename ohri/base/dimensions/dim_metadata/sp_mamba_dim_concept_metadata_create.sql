@@ -1,10 +1,10 @@
 USE analysis;
 
-DROP TABLE IF EXISTS  base_dim_concept_metadata;
+DROP TABLE IF EXISTS  mamba_dim_concept_metadata;
 
 -- $BEGIN
 
-CREATE TABLE base_dim_concept_metadata (
+CREATE TABLE mamba_dim_concept_metadata (
     concept_metadata_id INT NOT NULL AUTO_INCREMENT,
     column_number INT,
     column_label NVARCHAR(50) NOT NULL,

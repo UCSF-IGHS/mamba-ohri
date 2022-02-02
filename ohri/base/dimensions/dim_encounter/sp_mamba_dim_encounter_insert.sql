@@ -1,10 +1,10 @@
 USE analysis;
 
-TRUNCATE TABLE base_dim_encounter;
+TRUNCATE TABLE mamba_dim_encounter;
 
 -- $BEGIN
 
-INSERT INTO base_dim_encounter (
+INSERT INTO mamba_dim_encounter (
      external_encounter_id,
      external_encounter_type_id
 )

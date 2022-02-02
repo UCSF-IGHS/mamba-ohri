@@ -1,10 +1,10 @@
 USE analysis;
 
-TRUNCATE TABLE base_dim_concept_answer;
+TRUNCATE TABLE mamba_dim_concept_answer;
 
 -- $BEGIN
 
-INSERT INTO base_dim_concept_answer (
+INSERT INTO mamba_dim_concept_answer (
     concept_id,
     answer_concept,
     answer_drug

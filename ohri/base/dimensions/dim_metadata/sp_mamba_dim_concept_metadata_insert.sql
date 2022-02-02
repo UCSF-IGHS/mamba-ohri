@@ -1,10 +1,10 @@
 USE analysis;
 
-TRUNCATE TABLE base_dim_concept_metadata;
+TRUNCATE TABLE mamba_dim_concept_metadata;
 
 -- $BEGIN
 
-INSERT INTO base_dim_concept_metadata (
+INSERT INTO mamba_dim_concept_metadata (
     column_number,
     column_label,
     concept_uuid,
