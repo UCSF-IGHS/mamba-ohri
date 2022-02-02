@@ -64,18 +64,22 @@ UPDATE mamba_z_encounter_obs z
     ON e.external_encounter_type_id = et.external_encounter_type_id
 SET z.encounter_type_uuid = et.encounter_type_uuid;
 
--- Update Key pop types to Yes/No (in Z Table)
+-- Update Key pop types to Yes/NULL (in Z Table) -- may be move this to the fact_hts update script
 UPDATE mamba_z_encounter_obs z
     INNER JOIN mamba_dim_concept_metadata cm
     ON cm.concept_uuid = z.obs_value_coded_uuid
-SET z.obs_value_text = IF(z.obs_value_coded IS NOT NULL, 'Yes', 'No')
-WHERE cm.column_number in (7, 8, 9, 10, 11, 12, 13, 14,15,16,17,18, 19);
-
-
-SELECT * FROM mamba_z_encounter_obs z
-    INNER JOIN mamba_dim_concept_metadata cm
-    ON cm.concept_uuid = z.obs_question_uuid
--- SET z.obs_value_text = IF(z.obs_value_coded IS NOT NULL, 'Yes', 'No')
-WHERE cm.column_number in (7, 8, 9, 10, 11, 12, 13, 14);
-
+SET z.obs_value_text = IF(z.obs_value_coded IS NOT NULL, 'Yes', NULL)
+WHERE cm.column_label in (
+                          'key_pop_migrant_worker',
+                          'key_pop_uniformed_forces',
+                          'key_pop_transgender',
+                          'key_pop_AGYW',
+                          'key_pop_fisher_folk',
+                          'key_pop_prisoners',
+                          'key_pop_refugees',
+                          'key_pop_msm',
+                          'key_pop_fsw',
+                          'key_pop_truck_driver',
+                          'key_pop_pwd',
+                          'key_pop_pwid');
 -- $END
