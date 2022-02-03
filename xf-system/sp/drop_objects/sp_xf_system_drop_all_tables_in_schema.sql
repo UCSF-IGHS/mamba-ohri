@@ -1,18 +1,29 @@
+USE dbo;
 
-CREATE OR ALTER PROCEDURE dbo.sp_xf_system_drop_all_tables_in_schema(@schema AS NVARCHAR(255)) AS
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS sp_xf_system_drop_all_tables_in_schema;
+
+CREATE PROCEDURE sp_xf_system_drop_all_tables_in_schema(
+    IN database_name NVARCHAR(255)
+)
 BEGIN
 
-    DECLARE @name VARCHAR(128)
-    DECLARE @SQL NVARCHAR ( MAX );
+    SET session group_concat_max_len = 20000;
 
-    SELECT @name = (SELECT TOP 1 [name] FROM sys.objects WHERE [type] = 'U' AND SCHEMA_NAME(schema_id) = @schema ORDER BY [name])
+    SET @tbls = (SELECT GROUP_CONCAT(database_name, '.', TABLE_NAME SEPARATOR ', ')
+                 FROM information_schema.tables
+                 WHERE TABLE_TYPE = 'BASE TABLE'
+                   AND TABLE_SCHEMA = database_name);
 
-    WHILE @name IS NOT NULL
-    BEGIN
-        SELECT @SQL = 'DROP TABLE [' + @schema + '].[' + RTRIM(@name) +']'
-        CALL (@SQL)
-        PRINT 'Dropped table: ' + @name
-        SELECT @name = (SELECT TOP 1 [name] FROM sys.objects WHERE [type] = 'U' AND SCHEMA_NAME(schema_id) = @schema AND [name] > @name ORDER BY [name])
-    END
+    SET @drop_tables = CONCAT('DROP TABLE IF EXISTS ', @tbls);
 
-END
+    SET foreign_key_checks = 0; -- Remove check, so we don't have to drop tables in the correct order, nor whether they actually exist.
+    PREPARE drop_tbls FROM @drop_tables;
+    EXECUTE drop_tbls;
+    DEALLOCATE PREPARE drop_tbls;
+    SET foreign_key_checks = 1;
+
+END//
+
+DELIMITER ;
