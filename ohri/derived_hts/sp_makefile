@@ -1,5 +1,5 @@
-facts/fact_hts/sp_derived_hts_fact_hts.sql
+../sp/sp_generate_fact.sql
+
+facts/fact_hts/sp_fact_hts.sql
 
 sp_derived_hts_data_processing.sql
-
-# ../sp/sp_generate_fact.sql

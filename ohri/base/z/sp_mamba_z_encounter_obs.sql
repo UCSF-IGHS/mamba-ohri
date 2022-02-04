@@ -68,7 +68,7 @@ SET z.encounter_type_uuid = et.encounter_type_uuid;
 UPDATE mamba_z_encounter_obs z
     INNER JOIN mamba_dim_concept_metadata cm
     ON cm.concept_uuid = z.obs_value_coded_uuid
-SET z.obs_value_text = IF(z.obs_value_coded IS NOT NULL, 'Yes', NULL)
+SET z.obs_value_text = IF(z.obs_value_coded IS NOT NULL, '1', NULL)
 WHERE cm.column_label in (
                           'key_pop_migrant_worker',
                           'key_pop_uniformed_forces',

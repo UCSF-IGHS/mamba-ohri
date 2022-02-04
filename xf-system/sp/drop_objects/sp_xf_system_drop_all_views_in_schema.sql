@@ -1,18 +1,27 @@
+DELIMITER //
 
-CREATE OR ALTER PROCEDURE dbo.sp_xf_system_drop_all_views_in_schema(@schema AS NVARCHAR(255)) AS
+DROP PROCEDURE IF EXISTS dbo.sp_xf_system_drop_all_views_in_schema;
+
+CREATE PROCEDURE dbo.sp_xf_system_drop_all_views_in_schema(
+    IN database_name NVARCHAR(255)
+)
 BEGIN
 
-    DECLARE @name VARCHAR(128)
-    DECLARE @SQL VARCHAR(254)
+    SET session group_concat_max_len = 20000;
 
-    SELECT @name = (SELECT TOP 1 [name] FROM sys.objects WHERE [type] = 'V' AND SCHEMA_NAME(schema_id) = @schema ORDER BY [name])
+    SET @tbls = (SELECT GROUP_CONCAT(database_name, '.', TABLE_NAME SEPARATOR ', ')
+                 FROM information_schema.tables
+                 WHERE TABLE_TYPE = 'VIEW'
+                   AND TABLE_SCHEMA = database_name);
 
-    WHILE @name IS NOT NULL
-    BEGIN
-        SELECT @SQL = 'DROP VIEW [' + @schema + '].[' + RTRIM(@name) +']'
-        CALL (@SQL)
-        PRINT 'Dropped view: ' + @name
-        SELECT @name = (SELECT TOP 1 [name] FROM sys.objects WHERE [type] = 'V' AND SCHEMA_NAME(schema_id) = @schema AND [name] > @name ORDER BY [name])
-    END
+    SET @drop_views = CONCAT('DROP VIEW IF EXISTS ', @tbls);
 
-END
+    SET foreign_key_checks = 0; -- Remove check, so we don't have to drop views in the correct order, nor whether they actually exist.
+    PREPARE drop_tbls FROM @drop_views;
+    EXECUTE drop_tbls;
+    DEALLOCATE PREPARE drop_tbls;
+    SET foreign_key_checks = 1;
+
+END//
+
+DELIMITER ;

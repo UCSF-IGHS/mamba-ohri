@@ -144,6 +144,23 @@ DEALLOCATE PREPARE stmt;
 -- SELECT INTO table_name hts_facts
 -- Add extra param to capture table_name
 -- Create procedure to call above code
+-- Work on scripts under the xf-system
 
 
-UPDATE fact_hts SET @column_label=IF(@column_label IS NULL OR '', new_value_if_false, new_value_if_true);
+
+
+
+-- select tables
+SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_schema='analysis';
+-- select views
+SELECT table_name FROM information_schema.tables WHERE table_type = 'VIEW' AND table_schema='analysis';
+-- select functions
+SELECT * FROM information_schema.routines WHERE routine_type = 'FUNCTION' AND routine_schema = 'analysis';
+-- select procedures
+SELECT routine_name FROM information_schema.routines WHERE routine_type = 'PROCEDURE' AND routine_schema = 'analysis';
+
+
+
+SHOW tables;
+
+SHOW FULL TABLES;
