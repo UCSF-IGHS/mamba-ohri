@@ -1,22 +1,14 @@
+DELIMITER //
 
-CREATE OR ALTER PROCEDURE dbo.sp_xf_system_drop_all_functions_in_schema(@schema AS NVARCHAR(255)) AS
+DROP PROCEDURE IF EXISTS dbo.sp_xf_system_drop_all_stored_functions_in_schema;
+
+CREATE PROCEDURE dbo.sp_xf_system_drop_all_stored_functions_in_schema(
+    IN database_name NVARCHAR(255)
+)
 BEGIN
 
-    DECLARE @SQL NVARCHAR ( MAX );
+    DELETE FROM `mysql`.`proc` WHERE `type` = 'FUNCTION' AND `db` = database_name; -- works in mysql before v.8
 
-    SET @SQL = N'';
-    SELECT
-        @SQL = @SQL + N'
-    DROP FUNCTION [' + @schema + '].[' + RTRIM(c.name) +']; '
-    FROM
-        sys.objects AS c
-    WHERE
-        c.[type] IN ('FN', 'IF', 'FN', 'AF', 'FS', 'FT')
-        AND SCHEMA_NAME(c.schema_id) = @schema
-    ORDER BY
-        c.[type];
+END//
 
-    CALL(@SQL)
-    PRINT 'Dropped functions in schema: ' + @schema
-
-END
+DELIMITER ;

@@ -1,10 +1,8 @@
-USE dbo;
-
 DELIMITER //
 
-DROP PROCEDURE IF EXISTS sp_xf_system_drop_all_tables_in_schema;
+DROP PROCEDURE IF EXISTS dbo.sp_xf_system_drop_all_tables_in_schema;
 
-CREATE PROCEDURE sp_xf_system_drop_all_tables_in_schema(
+CREATE PROCEDURE dbo.sp_xf_system_drop_all_tables_in_schema(
     IN database_name NVARCHAR(255)
 )
 BEGIN

@@ -7,6 +7,6 @@ USE analysis;
 
 -- Derived facts
 -- SELECT 'Executing sp_derived_hts_fact_hts';
-CALL sp_derived_hts_fact_hts;
+CALL sp_fact_hts;
 
 -- $END
