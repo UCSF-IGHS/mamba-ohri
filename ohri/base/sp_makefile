@@ -41,6 +41,28 @@ dimensions/dim_metadata/sp_mamba_dim_concept_metadata_insert.sql
 dimensions/dim_metadata/sp_mamba_dim_concept_metadata_update.sql
 dimensions/dim_metadata/sp_mamba_dim_concept_metadata.sql
 
+dimensions/dim_metadata/sp_mamba_dim_concept_metadata_create.sql
+dimensions/dim_metadata/sp_mamba_dim_concept_metadata_insert.sql
+dimensions/dim_metadata/sp_mamba_dim_concept_metadata_update.sql
+dimensions/dim_metadata/sp_mamba_dim_concept_metadata.sql
+
+dimensions/dim_person/sp_mamba_dim_person_create.sql
+dimensions/dim_person/sp_mamba_dim_person_insert.sql
+dimensions/dim_person/sp_mamba_dim_person.sql
+
+dimensions/dim_person_name/sp_mamba_dim_person_name_create.sql
+dimensions/dim_person_name/sp_mamba_dim_person_name_insert.sql
+dimensions/dim_person_name/sp_mamba_dim_person_name.sql
+
+dimensions/dim_person_address/sp_mamba_dim_person_address_create.sql
+dimensions/dim_person_address/sp_mamba_dim_person_address_insert.sql
+dimensions/dim_person_address/sp_mamba_dim_person_address.sql
+
+dimensions/dim_client/sp_dim_client_create.sql
+dimensions/dim_client/sp_dim_client_insert.sql
+dimensions/dim_client/sp_dim_client_update.sql
+dimensions/dim_client/sp_dim_client.sql
+
 z/sp_mamba_z_encounter_obs.sql
 z/sp_mamba_z_tables.sql
 
