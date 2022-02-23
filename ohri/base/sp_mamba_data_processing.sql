@@ -3,7 +3,9 @@ USE analysis;
 -- $BEGIN
 
 -- SELECT 'Starting execution of Base Objects';
-CALL dbo.sp_xf_system_drop_all_objects_in_schema('analysis');
+-- CALL dbo.sp_xf_system_drop_all_objects_in_schema('analysis');
+CALL dbo.sp_xf_system_drop_all_tables_in_schema('analysis');
+-- CALL dbo.sp_xf_system_drop_all_views_in_schema('analysis');
 
 -- Base dimensions
 -- SELECT 'Executing sp_mamba_dim_concept_datatype';
