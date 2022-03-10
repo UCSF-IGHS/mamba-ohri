@@ -25,7 +25,7 @@ SELECT o.encounter_id   AS encounter_id,
        NULL             AS obs_answer_uuid,
        NULL             AS obs_value_coded_uuid,
        NULL             AS encounter_type_uuid
-FROM openmrs_working.obs o;
+FROM openmrs_dev.obs o;
 
 
 -- update obs question UUIDs

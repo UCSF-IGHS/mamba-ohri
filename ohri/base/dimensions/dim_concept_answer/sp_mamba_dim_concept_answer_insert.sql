@@ -14,6 +14,6 @@ SELECT
     ca.answer_concept AS answer_concept,
     ca.answer_drug AS answer_drug
 FROM
-    openmrs_working.concept_answer ca;
+    openmrs_dev.concept_answer ca;
 
 -- $END
