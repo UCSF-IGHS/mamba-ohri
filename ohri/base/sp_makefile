@@ -10,6 +10,8 @@
 
 ../functions/fn_get_obs_value_column.sql
 
+../sp/sp_generate_fact.sql
+
 dimensions/dim_concept_datatype/sp_mamba_dim_concept_datatype_create.sql
 dimensions/dim_concept_datatype/sp_mamba_dim_concept_datatype_insert.sql
 dimensions/dim_concept_datatype/sp_mamba_dim_concept_datatype.sql

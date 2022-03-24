@@ -1,0 +1,3 @@
+facts/fact_covid_case_assessment/sp_fact_covid_case_assessment.sql
+
+sp_derived_fact_covid_case_assessment_data_processing.sql

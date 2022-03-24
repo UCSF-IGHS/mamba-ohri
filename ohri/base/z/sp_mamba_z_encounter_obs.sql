@@ -82,4 +82,22 @@ WHERE cm.column_label in (
                           'key_pop_truck_driver',
                           'key_pop_pwd',
                           'key_pop_pwid');
+
+UPDATE mamba_z_encounter_obs z
+    INNER JOIN mamba_dim_concept_metadata cm
+    ON cm.concept_uuid = z.obs_value_coded_uuid
+SET z.obs_value_text = IF(z.obs_value_coded IS NOT NULL, 'Yes', 'No')
+WHERE cm.column_label in (
+                          'assessment_entry_country',
+                          'assessment_follow_up',
+                          'assessment_health_worker',
+                          'assessment_frontline_worker',
+                          'assessment_post_mortem',
+                          'assessment_quarantine',
+                          'assessment_rdt_confirmatory',
+                          'assessment_surveillance',
+                          'assessment_symptomatic',
+                          'assessment_travel_out_country',
+                          'assessment_voluntary',
+                          'assessment_other');
 -- $END
