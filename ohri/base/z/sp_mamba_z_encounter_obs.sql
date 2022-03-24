@@ -87,7 +87,8 @@ UPDATE mamba_z_encounter_obs z
     INNER JOIN mamba_dim_concept_metadata cm
     ON cm.concept_uuid = z.obs_value_coded_uuid
 SET z.obs_value_text = IF(z.obs_value_coded IS NULL, 'No', 'Yes')
-WHERE cm.column_label in (
+WHERE cm.concept_answer_obs = 1
+AND column_label in (
                           'assessment_entry_country',
                           'assessment_follow_up',
                           'assessment_health_worker',
