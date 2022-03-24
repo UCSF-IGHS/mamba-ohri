@@ -12,6 +12,6 @@ SELECT
     e.encounter_id AS external_encounter_id,
     e.encounter_type AS external_encounter_type_id
 FROM
-    openmrs_working.encounter e;
+    openmrs_dev.encounter e;
 
 -- $END
