@@ -43,11 +43,6 @@ dimensions/dim_metadata/sp_mamba_dim_concept_metadata_insert.sql
 dimensions/dim_metadata/sp_mamba_dim_concept_metadata_update.sql
 dimensions/dim_metadata/sp_mamba_dim_concept_metadata.sql
 
-dimensions/dim_metadata/sp_mamba_dim_concept_metadata_create.sql
-dimensions/dim_metadata/sp_mamba_dim_concept_metadata_insert.sql
-dimensions/dim_metadata/sp_mamba_dim_concept_metadata_update.sql
-dimensions/dim_metadata/sp_mamba_dim_concept_metadata.sql
-
 dimensions/dim_person/sp_mamba_dim_person_create.sql
 dimensions/dim_person/sp_mamba_dim_person_insert.sql
 dimensions/dim_person/sp_mamba_dim_person.sql

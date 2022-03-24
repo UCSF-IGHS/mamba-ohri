@@ -86,7 +86,7 @@ WHERE cm.column_label in (
 UPDATE mamba_z_encounter_obs z
     INNER JOIN mamba_dim_concept_metadata cm
     ON cm.concept_uuid = z.obs_value_coded_uuid
-SET z.obs_value_text = IF(z.obs_value_coded IS NOT NULL, 'Yes', 'No')
+SET z.obs_value_text = IF(z.obs_value_coded IS NULL, 'No', 'Yes')
 WHERE cm.column_label in (
                           'assessment_entry_country',
                           'assessment_follow_up',
@@ -99,5 +99,39 @@ WHERE cm.column_label in (
                           'assessment_symptomatic',
                           'assessment_travel_out_country',
                           'assessment_voluntary',
-                          'assessment_other');
+                          'assessment_other',
+                          'symptom_abdominal_pain',
+                           'symptom_chest_pain',
+                           'symptom_cough',
+                           'symptom_diarrhoea',
+                           'symptom_disturbance_consciousness',
+                           'symptom_general_weakness',
+                           'symptom_headache',
+                           'symptom_fever_chills',
+                           'symptom_irritability_confusion',
+                           'symptom_joint_pain',
+                           'symptom_loss_smell',
+                           'symptom_loss_taste',
+                           'symptom_muscular_pain',
+                           'symptom_nausea_vomiting',
+                           'symptom_red_eyes',
+                           'symptom_runny_nose',
+                           'symptom_shortness_breath',
+                           'symptom_sneezing',
+                           'symptom_sore_throat',
+                           'symptom_tiredness',
+                           'symptom_other',
+                           'comorbidity_cardiovascular',
+                           'comorbidity_chronic_lung',
+                           'comorbidity_chronic_neurological',
+                           'comorbidity_current_smoker',
+                           'comorbidity_diabetes',
+                           'comorbidity_former_smoker',
+                           'comorbidity_hypertension',
+                           'comorbidity_immunodeficiency',
+                           'comorbidity_liver',
+                           'comorbidity_malignancy',
+                           'comorbidity_renal',
+                           'comorbidity_tb',
+                           'comorbidity_other');
 -- $END
