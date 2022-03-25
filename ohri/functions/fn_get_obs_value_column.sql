@@ -9,7 +9,7 @@ BEGIN
 
     IF (conceptDatatype = 'Text' OR conceptDatatype = 'Coded' OR conceptDatatype = 'N/A' OR conceptDatatype = 'Boolean') THEN
         SET obsValueColumn = 'obs_value_text';
-    ELSEIF conceptDatatype = 'Date' THEN
+    ELSEIF conceptDatatype = 'Date' OR conceptDatatype = 'Datetime' THEN
         SET obsValueColumn = 'obs_value_datetime';
     ELSEIF conceptDatatype = 'Numeric' THEN
         SET obsValueColumn = 'obs_value_numeric';

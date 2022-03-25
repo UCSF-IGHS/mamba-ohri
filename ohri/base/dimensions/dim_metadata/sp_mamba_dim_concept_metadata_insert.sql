@@ -57,6 +57,7 @@ VALUES  (1, 'test_setting', '13abe5c9-6de2-4970-b348-36d352ee8eeb', 'fact_hts'),
         (46, 'recency_rtri_result', '165092AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'fact_hts'),
         (47, 'recency_vl_result', '856AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'fact_hts'),
 
+       (1, 'date_assessment', '160753AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'fact_covid_case_assessment'),
         (1, 'assessment_reason', 'ae46f4b1-c15d-4bba-ab41-b9157b82b0ce', 'fact_covid_case_assessment'),
         (2, 'assessment_contact_case', '5340f478-ec5d-41e6-bc62-961c52014d4d', 'fact_covid_case_assessment'),
         (3, 'assessment_entry_country', '677f4d21-7293-4810-abe6-57a192acde57', 'fact_covid_case_assessment'),
