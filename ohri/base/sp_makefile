@@ -11,7 +11,7 @@
 ../functions/fn_get_obs_value_column.sql
 
 ../sp/sp_flatten_encounter.sql
-../sp/sp_update_column_values.sql
+../sp/sp_multiselect_values_update.sql
 
 dimensions/dim_concept_datatype/sp_mamba_dim_concept_datatype_create.sql
 dimensions/dim_concept_datatype/sp_mamba_dim_concept_datatype_insert.sql
@@ -64,10 +64,10 @@ dimensions/dim_client/sp_dim_client.sql
 z/sp_mamba_z_encounter_obs.sql
 z/sp_mamba_z_tables.sql
 
-facts/fact_hts_encounter/sp_fact_hts_encounter.sql
-facts/fact_hts_encounter/sp_fact_hts_encounter_cleaning.sql
+facts/fact_hts_encounter/sp_base_fact_hts_encounter.sql
+facts/fact_hts_encounter/sp_base_fact_hts_encounter_cleaning.sql
 
-facts/fact_covid_encounter/sp_fact_covid_encounter.sql
-facts/fact_covid_encounter/sp_fact_covid_encounter_cleaning.sql
+facts/fact_covid_encounter/sp_base_fact_covid_encounter.sql
+facts/fact_covid_encounter/sp_base_fact_covid_encounter_cleaning.sql
 
 sp_mamba_data_processing.sql
