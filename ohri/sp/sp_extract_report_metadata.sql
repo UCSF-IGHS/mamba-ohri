@@ -10,6 +10,8 @@ BEGIN
 
     SET session group_concat_max_len = 20000;
 
+    -- TRUNCATE TABLE metadata_table;
+
     SELECT JSON_EXTRACT(report_data, '$.flat_report_metadata') INTO @report_array;
     SELECT JSON_LENGTH(@report_array) INTO @report_array_len;
 
@@ -32,7 +34,7 @@ BEGIN
                     SELECT JSON_EXTRACT(@column_array, CONCAT('$.', @field_name)) INTO @concept_uuid;
 
                     SET @tbl_name = '';
-                    INSERT INTO mamba_dim_concept_metadata2(report_name,
+                    INSERT INTO mamba_dim_concept_metadata(report_name,
                                                             flat_table_name,
                                                             encounter_type_uuid,
                                                             column_label,

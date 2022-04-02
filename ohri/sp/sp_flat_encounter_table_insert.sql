@@ -22,7 +22,7 @@ BEGIN
                 INNER JOIN mamba_dim_concept_metadata cm
                 ON IF(cm.concept_answer_obs=1, cm.concept_uuid=eo.obs_value_coded_uuid, cm.concept_uuid=eo.obs_question_uuid)
             WHERE cm.flat_table_name = ''', flat_encounter_table_name, '''
-            AND eo.encounter_type_uuid =  cm.encounter_type_uuid
+            AND eo.encounter_type_uuid = cm.encounter_type_uuid
             GROUP BY eo.encounter_id;');
 
     PREPARE createtb FROM @create_table;
