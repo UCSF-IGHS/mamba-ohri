@@ -16,4 +16,10 @@ UPDATE mamba_dim_concept_metadata md
         ON ca.answer_concept = c.external_concept_id
 SET md.concept_answer_obs = 1;
 
+-- Update the Concept datatypes
+UPDATE mamba_dim_concept_metadata md
+    INNER JOIN mamba_dim_encounter_type et
+        ON md.concept_uuid = c.uuid
+SET md.output_table_name = c.datatype;
+
 -- $END

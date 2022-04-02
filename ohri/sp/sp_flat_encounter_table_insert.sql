@@ -16,6 +16,8 @@ BEGIN
                           WHERE TABLE_NAME = output_table_name
                             AND TABLE_SCHEMA = Database());
 
+    TRUNCATE TABLE output_table_name;
+
     SET @create_table = CONCAT(
             'INSERT INTO `', output_table_name, '` SELECT ', @column_labels, '
             FROM mamba_z_encounter_obs eo
