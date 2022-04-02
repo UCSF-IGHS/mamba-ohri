@@ -131,6 +131,7 @@ SET @report_data = '
    ]
 }
 ';
-CALL sp_extract_report_metadata(@report_data, '');
+
+CALL sp_extract_report_metadata(@report_data, 'mamba_dim_concept_metadata');
 
 -- $END

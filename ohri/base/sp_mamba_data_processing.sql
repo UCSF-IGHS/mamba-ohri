@@ -44,4 +44,8 @@ CALL sp_dim_client;
 -- SELECT 'Executing sp_mamba_z_tables';
 CALL sp_mamba_z_tables;
 
+-- SELECT 'Executing generating fact tables';
+CALL sp_fact_hts_encounter;
+CALL sp_fact_covid_encounter;
+
 -- $END

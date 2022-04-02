@@ -64,10 +64,14 @@ dimensions/dim_client/sp_dim_client.sql
 z/sp_mamba_z_encounter_obs.sql
 z/sp_mamba_z_tables.sql
 
-facts/fact_hts_encounter/sp_base_fact_hts_encounter.sql
-facts/fact_hts_encounter/sp_base_fact_hts_encounter_cleaning.sql
+facts/fact_hts_encounter/sp_fact_hts_encounter_create.sql
+facts/fact_hts_encounter/sp_fact_hts_encounter_insert.sql
+facts/fact_hts_encounter/sp_fact_hts_encounter_cleaning.sql
+facts/fact_hts_encounter/sp_fact_hts_encounter.sql
 
-facts/fact_covid_encounter/sp_base_fact_covid_encounter.sql
-facts/fact_covid_encounter/sp_base_fact_covid_encounter_cleaning.sql
+facts/fact_covid_encounter/sp_fact_covid_encounter_create.sql
+facts/fact_covid_encounter/sp_fact_covid_encounter_insert.sql
+facts/fact_covid_encounter/sp_fact_covid_encounter_cleaning.sql
+facts/fact_covid_encounter/sp_fact_covid_encounter.sql
 
 sp_mamba_data_processing.sql
