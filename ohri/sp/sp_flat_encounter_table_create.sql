@@ -17,9 +17,7 @@ BEGIN
                      WHERE flat_table_name = flat_encounter_table_name;
 
     SET @create_table = CONCAT(
-            'CREATE TABLE `', flat_encounter_table_name ,'` (encounter_id INT, client_id INT, ', @column_labels, ');');
-
-    SELECT @create_table;
+            'CREATE TABLE `', flat_encounter_table_name ,'` (encounter_id INT, client_id INT, ', @column_labels, ' TEXT);');
 
     PREPARE deletetb FROM @drop_table;
     PREPARE createtb FROM @create_table;
