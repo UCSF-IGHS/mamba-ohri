@@ -8,20 +8,18 @@ CREATE PROCEDURE sp_flat_encounter_table_create(
 BEGIN
 
     SET session group_concat_max_len = 20000;
-    SET @sql := NULL;
+    SET @column_labels := NULL;
 
     SET @drop_table = CONCAT('DROP TABLE IF EXISTS `', flat_encounter_table_name, '`');
 
-    SELECT
-      GROUP_CONCAT(DISTINCT
-        CONCAT(' MAX(CASE WHEN column_label = ''', column_label, ''' THEN ', fn_get_obs_value_column(concept_datatype), ' END) ', column_label)
-      ) INTO @sql
-    FROM mamba_dim_concept_metadata
-        WHERE flat_table_name = flat_encounter_table_name;
+    SELECT GROUP_CONCAT(column_label SEPARATOR ' TEXT, ') INTO @column_labels
+                     FROM mamba_dim_concept_metadata
+                     WHERE flat_table_name = flat_encounter_table_name;
 
     SET @create_table = CONCAT(
-            'CREATE TABLE `', flat_encounter_table_name ,'` SELECT encounter_id, person_id AS client_id, ', @sql, '
-            FROM mamba_z_encounter_obs limit 0;');
+            'CREATE TABLE `', flat_encounter_table_name ,'` (encounter_id INT, client_id INT, ', @column_labels, ');');
+
+    SELECT @create_table;
 
     PREPARE deletetb FROM @drop_table;
     PREPARE createtb FROM @create_table;

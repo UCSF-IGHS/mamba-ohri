@@ -27,8 +27,5 @@ from ((`mamba_dim_person` `psn`
 left join `mamba_dim_person_name` `pn` on ((`psn`.`external_person_id` = `pn`.`external_person_id`)))
 left join `mamba_dim_person_address` `pa` on ((`psn`.`external_person_id` = `pa`.`external_person_id`)));
 
-insert into dim_client select * from ((`mamba_dim_person` `psn`
-left join `mamba_dim_person_name` `pn` on ((`psn`.`external_person_id` = `pn`.`external_person_id`)))
-left join `mamba_dim_person_address` `pa` on ((`psn`.`external_person_id` = `pa`.`external_person_id`)));;
 
 -- $END

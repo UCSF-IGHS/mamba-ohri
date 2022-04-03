@@ -10,8 +10,10 @@
 
 ../functions/fn_get_obs_value_column.sql
 
-../sp/sp_flatten_encounter.sql
+../sp/sp_flat_encounter_table_create.sql
+../sp/sp_flat_encounter_table_insert.sql
 ../sp/sp_multiselect_values_update.sql
+../sp/sp_extract_report_metadata.sql
 
 dimensions/dim_concept_datatype/sp_mamba_dim_concept_datatype_create.sql
 dimensions/dim_concept_datatype/sp_mamba_dim_concept_datatype_insert.sql

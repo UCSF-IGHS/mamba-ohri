@@ -7,6 +7,5 @@ USE analysis;
 
 CALL sp_mamba_data_processing();
 CALL sp_derived_hts_data_processing();
-CALL sp_derived_fact_covid_case_assessment_data_processing();
 
 -- $END

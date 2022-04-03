@@ -16,7 +16,7 @@ BEGIN
 
     TRUNCATE TABLE flat_encounter_table_name;
 
-    SET @create_table = CONCAT(
+    SET @insert_stmt = CONCAT(
             'INSERT INTO `', flat_encounter_table_name, '` SELECT ', @column_labels, '
             FROM mamba_z_encounter_obs eo
                 INNER JOIN mamba_dim_concept_metadata cm
@@ -25,9 +25,9 @@ BEGIN
             AND eo.encounter_type_uuid = cm.encounter_type_uuid
             GROUP BY eo.encounter_id;');
 
-    PREPARE createtb FROM @create_table;
-    EXECUTE createtb;
-    DEALLOCATE PREPARE createtb;
+    PREPARE inserttbl FROM @insert_stmt;
+    EXECUTE inserttbl;
+    DEALLOCATE PREPARE inserttbl;
 
 END//
 
