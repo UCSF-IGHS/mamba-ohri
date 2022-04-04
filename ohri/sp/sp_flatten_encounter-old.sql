@@ -1,8 +1,8 @@
 DELIMITER //
 
-DROP PROCEDURE IF EXISTS sp_generate_fact;
+DROP PROCEDURE IF EXISTS sp_flatten_encounter;
 
-CREATE PROCEDURE sp_generate_fact(
+CREATE PROCEDURE sp_flatten_encounter(
     IN report NVARCHAR(255),
     IN output_table_name NVARCHAR(255),
     IN encounter_type_uuid NVARCHAR(255)
