@@ -8,7 +8,7 @@ SET @report_data = '
       {
          "report_name":"HTS Report",
          "flat_table_name":"encounter_hts",
-         "encounter_type_uuid":"253a43d3-c99e-415c-8b78-ee7d4d3c1d54",
+         "encounter_type_uuid":"79c1f50f-f77d-42e2-ad2a-d29304dde2fe",
          "table_columns":{
             "test_setting":"13abe5c9-6de2-4970-b348-36d352ee8eeb",
             "community_service_point":"74a3b695-30f7-403b-8f63-3f766461e104",
@@ -61,7 +61,7 @@ SET @report_data = '
       {
          "report_name":"COVID Report",
          "flat_table_name":"encounter_covid",
-         "encounter_type_uuid":"79c1f50f-f77d-42e2-ad2a-d29304dde2fe",
+         "encounter_type_uuid":"253a43d3-c99e-415c-8b78-ee7d4d3c1d54",
          "table_columns":{
             "date_assessment":"160753AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             "assessment_contact_case":"5340f478-ec5d-41e6-bc62-961c52014d4d",
