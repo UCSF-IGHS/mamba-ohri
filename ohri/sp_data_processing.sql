@@ -6,6 +6,7 @@ USE analysis;
 -- $BEGIN
 
 CALL sp_mamba_data_processing();
-CALL sp_derived_hts_data_processing();
+CALL sp_derived_covid_data_processing();
+
 
 -- $END
