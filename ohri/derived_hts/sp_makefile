@@ -1,3 +1,9 @@
+dimensions/hts_dim_client/sp_covid_dim_client_create.sql
+dimensions/hts_dim_client/sp_covid_dim_client_insert.sql
+dimensions/hts_dim_client/sp_covid_dim_client_update.sql
+dimensions/hts_dim_client/sp_covid_dim_client.sql
+
+
 facts/fact_hts/sp_fact_hts.sql
 facts/fact_hts/sp_fact_hts_cleaning.sql
 

@@ -6,7 +6,7 @@ USE analysis;
 -- SELECT 'Starting execution of Derived Objects';
 
 -- Derived facts
--- SELECT 'Executing sp_derived_hts_fact_hts';
-CALL sp_fact_covid_case_assessment;
+-- SELECT '';
+CALL sp_covid_dim_client;
 
 -- $END
