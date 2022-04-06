@@ -23,7 +23,7 @@ BEGIN
 
         SET @drop_tables = CONCAT('DROP TABLE IF EXISTS ', @tbls);
 
-        SET foreign_key_checks = 0; -- Remove check, so we don't have to drop tables in the correct order, nor whether they actually exist.
+        SET foreign_key_checks = 0; -- Remove check, so we don't have to drop tables in the correct order, or care if they exist or not.
         PREPARE drop_tbls FROM @drop_tables;
         EXECUTE drop_tbls;
         DEALLOCATE PREPARE drop_tbls;

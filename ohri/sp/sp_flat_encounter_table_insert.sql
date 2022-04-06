@@ -14,10 +14,12 @@ BEGIN
                           FROM INFORMATION_SCHEMA.COLUMNS
                           WHERE TABLE_NAME = @tbl_name
                             AND TABLE_SCHEMA = Database());
+
     SELECT
       GROUP_CONCAT(DISTINCT
         CONCAT(' MAX(CASE WHEN column_label = ''', column_label, ''' THEN ', fn_get_obs_value_column(concept_datatype), ' END) ', column_label)
-      ) INTO @column_labels
+      ORDER BY concept_metadata_id ASC)
+    INTO @column_labels
     FROM mamba_dim_concept_metadata
          WHERE flat_table_name = @tbl_name;
 
