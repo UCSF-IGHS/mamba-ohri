@@ -32,7 +32,8 @@ FROM openmrs_dev.obs o;
 UPDATE mamba_z_encounter_obs z
     INNER JOIN mamba_dim_concept c
     ON z.obs_question_concept_id = c.external_concept_id
-SET z.obs_question_uuid = c.uuid;
+SET z.obs_question_uuid = c.uuid
+WHERE TRUE;
 
 -- update obs answer UUIDs
 UPDATE mamba_z_encounter_obs z
@@ -44,7 +45,8 @@ SET z.obs_answer_uuid = (IF(dt.datatype_name = 'Coded',
                             (SELECT c.uuid
                              FROM mamba_dim_concept c
                              where c.external_concept_id = z.obs_value_coded AND z.obs_value_coded IS NOT NULL),
-                            c.uuid));
+                            c.uuid))
+WHERE TRUE;
 
 -- update obs_value_coded (UUIDs & values)
 UPDATE mamba_z_encounter_obs z
@@ -62,6 +64,7 @@ UPDATE mamba_z_encounter_obs z
     ON z.encounter_id = e.external_encounter_id
     INNER JOIN mamba_dim_encounter_type et
     ON e.external_encounter_type_id = et.external_encounter_type_id
-SET z.encounter_type_uuid = et.encounter_type_uuid;
+SET z.encounter_type_uuid = et.encounter_type_uuid
+WHERE TRUE;
 
 -- $END
