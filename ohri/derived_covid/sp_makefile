@@ -3,11 +3,6 @@ dimensions/covid_dim_client/sp_covid_dim_client_insert.sql
 dimensions/covid_dim_client/sp_covid_dim_client_update.sql
 dimensions/covid_dim_client/sp_covid_dim_client.sql
 
-dimensions/dim_agegroup/sp_dim_age_create.sql
-dimensions/dim_agegroup/sp_dim_age_insert.sql
-#dimensions/dim_agegroup/sp_dim_age_update.sql
-dimensions/dim_agegroup/sp_dim_age.sql
-
 facts/fact_covid_case_assessment/sp_covid_fact_encounter_create.sql
 facts/fact_covid_case_assessment/sp_covid_fact_encounter_insert.sql
 facts/fact_covid_case_assessment/sp_covid_fact_encounter_update.sql

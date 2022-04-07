@@ -41,6 +41,8 @@ CALL sp_mamba_dim_person_address;
 -- SELECT 'Executing sp_dim_client';
 CALL sp_dim_client;
 
+CALL sp_dim_agegroup;
+
 -- SELECT 'Executing sp_mamba_z_tables';
 CALL sp_mamba_z_tables;
 
