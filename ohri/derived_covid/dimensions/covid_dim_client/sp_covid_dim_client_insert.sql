@@ -15,7 +15,7 @@ INSERT INTO covid_dim_client (
 SELECT
     c.client_id,
     date_of_birth,
-    DATEDIFF("order_date","date_of_birth")/365 as ageattest,
+    DATEDIFF(CAST(cd.order_date as date ),CAST(date_of_birth as DATE ))/365 as ageattest,
     sex,
     county,
     sub_county,

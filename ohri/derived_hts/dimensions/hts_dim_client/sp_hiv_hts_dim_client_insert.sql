@@ -15,7 +15,7 @@ INSERT INTO hiv_hts_dim_client (
 SELECT
     c.client_id,
     date_of_birth,
-    DATEDIFF("date_test_conducted","date_of_birth")/365 as ageattest,
+    DATEDIFF(date_test_conducted,date_of_birth)/365 as ageattest,
     sex,
     county,
     sub_county,

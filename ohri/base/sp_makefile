@@ -9,11 +9,13 @@
 ../../xf-system/sp/drop_objects/sp_xf_system_drop_all_objects_in_schema.sql
 
 ../functions/fn_get_obs_value_column.sql
+../functions/fn_calculate_agegroup.sql
 
 ../sp/sp_flat_encounter_table_create.sql
 ../sp/sp_flat_encounter_table_insert.sql
 ../sp/sp_multiselect_values_update.sql
 ../sp/sp_extract_report_metadata.sql
+../sp/sp_load_agegroup.sql
 
 dimensions/dim_concept_datatype/sp_mamba_dim_concept_datatype_create.sql
 dimensions/dim_concept_datatype/sp_mamba_dim_concept_datatype_insert.sql
@@ -63,6 +65,11 @@ dimensions/dim_client/sp_dim_client_insert.sql
 dimensions/dim_client/sp_dim_client_update.sql
 dimensions/dim_client/sp_dim_client.sql
 
+dimensions/dim_agegroup/sp_dim_agegroup_create.sql
+dimensions/dim_agegroup/sp_dim_agegroup_insert.sql
+dimensions/dim_agegroup/sp_dim_agegroup_update.sql
+dimensions/dim_agegroup/sp_dim_agegroup.sql
+
 z/sp_mamba_z_encounter_obs.sql
 z/sp_mamba_z_tables.sql
 
@@ -75,5 +82,6 @@ facts/fact_covid_encounter/sp_fact_covid_encounter_create.sql
 facts/fact_covid_encounter/sp_fact_covid_encounter_insert.sql
 facts/fact_covid_encounter/sp_fact_covid_encounter_cleaning.sql
 facts/fact_covid_encounter/sp_fact_covid_encounter.sql
+
 
 sp_mamba_data_processing.sql
