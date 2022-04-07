@@ -9,10 +9,10 @@ create table if not exists hiv_hts_dim_client(
     client_id     int null,
     date_of_birth date null,
     ageattest     int null,
-    sex           varchar(255) charset utf8 null,
-    county        varchar(255) charset utf8 null,
-    sub_county    varchar(255) charset utf8 null,
-    ward          varchar(255) charset utf8 null,
+    sex           nvarchar(50)  null,
+    county        nvarchar(255)  null,
+    sub_county    nvarchar(255)  null,
+    ward          nvarchar(255)  null,
     PRIMARY KEY (id)
 );
 

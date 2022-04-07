@@ -8,5 +8,6 @@ USE analysis;
 -- Derived facts
 -- SELECT '';
 CALL sp_covid_dim_client;
-
+CALL sp_dim_age;
+CALL sp_covid_fact_encounter;
 -- $END
