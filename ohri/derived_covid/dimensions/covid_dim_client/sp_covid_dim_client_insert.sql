@@ -4,7 +4,7 @@ USE analysis;
 -- $BEGIN
 
 INSERT INTO covid_dim_client (
-        id, client_id,
+        client_id,
         date_of_birth,
         ageattest,
         sex,
