@@ -3,7 +3,6 @@ USE analysis;
 DROP TABLE IF EXISTS dim_client;
 
 -- $BEGIN
-
 CREATE TABLE dim_client (
     id INT NOT NULL AUTO_INCREMENT,
     client_id INT,
@@ -15,5 +14,4 @@ CREATE TABLE dim_client (
     ward NVARCHAR(255) NULL,
     PRIMARY KEY (id)
 );
-
 -- $END

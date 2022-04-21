@@ -19,7 +19,8 @@ BEGIN
         SET @tbls = (SELECT GROUP_CONCAT(database_name, '.', TABLE_NAME SEPARATOR ', ')
                      FROM information_schema.tables
                      WHERE TABLE_TYPE = 'BASE TABLE'
-                       AND TABLE_SCHEMA = database_name);
+                       AND TABLE_SCHEMA = database_name
+                        AND TABLE_NAME REGEXP '^(mamba_|dim_|fact_)');
 
         SET @drop_tables = CONCAT('DROP TABLE IF EXISTS ', @tbls);
 
