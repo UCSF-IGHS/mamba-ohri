@@ -1,5 +1,7 @@
 DELIMITER //
 
+-- Note: Dropping of Tables is now happening in individual create scripts to prevent accidental drop of openmrs tables - not using this script for now
+
 DROP PROCEDURE IF EXISTS dbo.sp_xf_system_drop_all_tables_in_schema//
 
 CREATE PROCEDURE dbo.sp_xf_system_drop_all_tables_in_schema(
