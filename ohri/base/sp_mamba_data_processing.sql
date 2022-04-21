@@ -4,7 +4,7 @@ USE analysis;
 
 -- SELECT 'Starting execution of Base Objects';
 -- CALL dbo.sp_xf_system_drop_all_objects_in_schema('analysis');
--- CALL dbo.sp_xf_system_drop_all_tables_in_schema('analysis'); Note: Dropping of Tables is now happening in individual scripts to prevent accidental drop of openmrs tables
+CALL dbo.sp_xf_system_drop_all_tables_in_schema('analysis');
 -- CALL dbo.sp_xf_system_drop_all_views_in_schema('analysis');
 
 -- Base dimensions

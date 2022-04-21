@@ -1,7 +1,5 @@
 DELIMITER //
 
--- Note: Dropping of Tables is now happening in individual create scripts to prevent accidental drop of openmrs tables - not using this script for now
-
 DROP PROCEDURE IF EXISTS dbo.sp_xf_system_drop_all_tables_in_schema//
 
 CREATE PROCEDURE dbo.sp_xf_system_drop_all_tables_in_schema(
@@ -21,7 +19,8 @@ BEGIN
         SET @tbls = (SELECT GROUP_CONCAT(database_name, '.', TABLE_NAME SEPARATOR ', ')
                      FROM information_schema.tables
                      WHERE TABLE_TYPE = 'BASE TABLE'
-                       AND TABLE_SCHEMA = database_name);
+                       AND TABLE_SCHEMA = database_name
+                        AND TABLE_NAME REGEXP '^(mamba_|dim_|fact_)');
 
         SET @drop_tables = CONCAT('DROP TABLE IF EXISTS ', @tbls);
 

@@ -114,14 +114,14 @@ fi
 clear_message="No objects to clean out."
 clear_objects_sql=""
 if [ "$objects_to_clear" == "all" ]; then
-    # clear_message="clearing all objects in $schema_name"
-    # clear_objects_sql="CALL dbo.sp_xf_system_drop_all_objects_in_schema '$schema_name' "
+    clear_message="clearing all objects in $schema_name"
+    clear_objects_sql="CALL dbo.sp_xf_system_drop_all_objects_in_schema '$schema_name' "
 elif [ "$objects_to_clear" == "sp" ]; then
-    # clear_message="clearing all stored procedures in $schema_name"
-    # clear_objects_sql="CALL dbo.sp_xf_system_drop_all_stored_procedures_in_schema '$schema_name' "
+    clear_message="clearing all stored procedures in $schema_name"
+    clear_objects_sql="CALL dbo.sp_xf_system_drop_all_stored_procedures_in_schema '$schema_name' "
 elif [ "$objects_to_clear" == "views" ] || [ "$objects_to_clear" == "view" ] || [ "$objects_to_clear" == "v" ]; then
-    # clear_message="clearing all views in $schema_name"
-    # clear_objects_sql="CALL dbo.sp_xf_system_drop_all_views_in_schema '$schema_name' "
+    clear_message="clearing all views in $schema_name"
+    clear_objects_sql="CALL dbo.sp_xf_system_drop_all_views_in_schema '$schema_name' "
 fi
 
 if [ -n "$stored_procedures" ]
