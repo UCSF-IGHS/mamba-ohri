@@ -3,7 +3,7 @@ USE analysis;
 
 -- $BEGIN
 
-INSERT INTO hiv_hts_fact_encounter (
+INSERT INTO fact_encounter_hiv_hts (
     encounter_id,
     client_id,
     date_tested,

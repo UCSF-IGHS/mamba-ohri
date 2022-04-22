@@ -1,10 +1,10 @@
 USE analysis;
 
-DROP TABLE IF EXISTS hiv_hts_dim_client;
+DROP TABLE IF EXISTS dim_client_hiv_hts;
 
 -- $BEGIN
 
-create table if not exists hiv_hts_dim_client(
+create table if not exists dim_client_hiv_hts(
     id   int auto_increment,
     client_id     int null,
     date_of_birth date null,

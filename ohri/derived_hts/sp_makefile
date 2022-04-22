@@ -1,14 +1,14 @@
 #For dimension tables
-dimensions/hts_dim_client/sp_hiv_hts_dim_client_create.sql
-dimensions/hts_dim_client/sp_hiv_hts_dim_client_insert.sql
-dimensions/hts_dim_client/sp_hiv_hts_dim_client_update.sql
-dimensions/hts_dim_client/sp_hiv_hts_dim_client.sql
+dimensions/dim_client_hiv_hts/sp_dim_client_hiv_hts_create.sql
+dimensions/dim_client_hiv_hts/sp_dim_client_hiv_hts_insert.sql
+dimensions/dim_client_hiv_hts/sp_dim_client_hiv_hts_update.sql
+dimensions/dim_client_hiv_hts/sp_dim_client_hiv_hts.sql
 
 # For fact table
-facts/fact_hts/sp_hiv_hts_fact_encounter_create.sql
-facts/fact_hts/sp_hiv_hts_fact_encounter_insert.sql
-facts/fact_hts/sp_hiv_hts_fact_encounter_update.sql
-facts/fact_hts/sp_hiv_hts_fact_encounter.sql
+facts/fact_hts/sp_fact_encounter_hiv_hts_create.sql
+facts/fact_hts/sp_fact_encounter_hiv_hts_insert.sql
+facts/fact_hts/sp_fact_encounter_hiv_hts_update.sql
+facts/fact_hts/sp_fact_encounter_hiv_hts.sql
 
 facts/fact_hts/sp_fact_hts.sql
 facts/fact_hts/sp_fact_hts_cleaning.sql

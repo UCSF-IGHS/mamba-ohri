@@ -1,9 +1,9 @@
-# ---------INSERT into table
+# -----INSERT into table
 USE analysis;
 
 -- $BEGIN
 
-INSERT INTO hiv_hts_dim_client (
+INSERT INTO dim_client_covid (
         client_id,
         date_of_birth,
         ageattest,
@@ -15,14 +15,14 @@ INSERT INTO hiv_hts_dim_client (
 SELECT
     c.client_id,
     date_of_birth,
-    DATEDIFF(date_test_conducted,date_of_birth)/365 as ageattest,
+    DATEDIFF(CAST(cd.order_date as date ),CAST(date_of_birth as DATE ))/365 as ageattest,
     sex,
     county,
     sub_county,
     ward
 FROM dim_client c
-INNER JOIN encounter_hts hts
-    ON c.client_id = hts.client_id;
+INNER JOIN encounter_covid cd
+    ON c.client_id = cd.client_id;
 
 
 -- $END

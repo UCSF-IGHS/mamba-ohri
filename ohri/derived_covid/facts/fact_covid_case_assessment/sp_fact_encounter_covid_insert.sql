@@ -3,7 +3,7 @@ USE analysis;
 
 -- $BEGIN
 
-INSERT INTO covid_fact_encounter (
+INSERT INTO fact_encounter_covid (
     encounter_id ,
     client_id,
     covid_test,

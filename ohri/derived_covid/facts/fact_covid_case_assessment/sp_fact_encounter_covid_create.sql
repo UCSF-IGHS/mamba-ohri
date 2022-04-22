@@ -1,9 +1,9 @@
 USE analysis;
 
-DROP TABLE IF EXISTS covid_fact_encounter;
+DROP TABLE IF EXISTS fact_encounter_covid;
 
 -- $BEGIN
-create table if not exists covid_fact_encounter (
+create table if not exists fact_encounter_covid (
     encounter_id                      int  null,
     client_id                         int  null,
     covid_test                        nvarchar(255) null,
