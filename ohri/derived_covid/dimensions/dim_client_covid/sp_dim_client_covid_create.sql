@@ -2,11 +2,11 @@
 
 USE analysis;
 
-DROP TABLE IF EXISTS covid_dim_client;
+DROP TABLE IF EXISTS dim_client_covid;
 
 -- $BEGIN
 
-create table  covid_dim_client(
+create table  dim_client_covid(
     id   int auto_increment,
     client_id     int null,
     date_of_birth date null,
