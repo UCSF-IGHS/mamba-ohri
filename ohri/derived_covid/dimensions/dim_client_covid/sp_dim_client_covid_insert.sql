@@ -21,7 +21,7 @@ SELECT
     sub_county,
     ward
 FROM dim_client c
-INNER JOIN encounter_covid cd
+INNER JOIN flat_encounter_covid cd
     ON c.client_id = cd.client_id;
 
 

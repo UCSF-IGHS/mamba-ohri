@@ -127,6 +127,30 @@ SET @report_data = '
             "date_died":"1543AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             "long_covid_description":"4560c560-4bd6-4989-bff8-6e4e1fa39972"
          }
+      },
+      {
+         "report_name":"UgandaEMR HTS Report",
+         "flat_table_name":"flat_encounter_ugemr_hts",
+         "encounter_type_uuid":"264daIZd-f80e-48fe-nba9-P37f2W1905Pv",
+         "table_columns":{
+            "consent_provided":"0698a45b-771c-4d11-84ff-095598c8883c",
+            "recency_rtri_result":"141520BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+            "initial_kit_name":"16091701-69b8-4bc7-82b3-b1726cf5a5df",
+            "pretest_counselling":"193039f1-c378-4d81-bb72-653b66c69914",
+            "ever_tested_hiv":"2766c090-c057-44f2-98f0-691b6d0336dc",
+            "result_received_couple":"2aa9f0c1-3f7e-49cd-86ee-baac0d2d5f2d",
+            "reason_for_test":"2afe1128-c3f6-4b35-b119-d17b9b9958ed",
+            "client_linked_care":"3d620422-0641-412e-ab31-5e45b98bc459",
+            "hts_approach":"46648b1d-b099-433b-8f9c-3815ff1e0a0f",
+            "community_service_point":"4f4e6d1d-4343-42cc-ba47-2319b8a84369",
+            "facility_service_point":"720a1e85-ea1c-4f7b-a31e-cb896978df79",
+            "referred_prevention_services":"73686a14-b55c-4b10-916d-fda2046b803f",
+            "couple_result":"94a5bd0a-b79d-421e-ab71-8e382eed100f",
+            "given_result":"ad2884a2-830f-4ca8-bc1e-1e1fd2df0f81",
+            "type_pretest_counselling":"b92b1777-4356-49b2-9c83-a799680dc7d4",
+            "referred_tb_program":"c5da115d-f6a3-4d13-b182-c2e982a3a796",
+            "facility_referred_care":"dce015bb-30ab-102d-86b0-7a5022ba4115"
+         }
       }
    ]
 }

@@ -139,7 +139,7 @@ SELECT
     patient_outcome,
     cast(date_recovered as date)date_recovered,
     cast(date_died as date)date_died
-FROM encounter_covid;
+FROM flat_encounter_covid;
 
 
 -- $END

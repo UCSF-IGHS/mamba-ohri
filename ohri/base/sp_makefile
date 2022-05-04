@@ -1,12 +1,12 @@
 #../../xf-system/sp/drop_objects/sp_xf_system_drop_all_foreign_keys_in_schema.sql
 #../../xf-system/sp/drop_objects/sp_xf_system_drop_all_views_in_schema.sql
-../../xf-system/sp/drop_objects/sp_xf_system_drop_all_tables_in_schema.sql
 #../../xf-system/sp/drop_objects/sp_xf_system_drop_all_primary_keys_in_schema.sql
 ../../xf-system/sp/drop_objects/sp_xf_system_drop_all_functions_in_schema.sql
 ../../xf-system/sp/drop_objects/sp_xf_system_drop_all_stored_procedures_in_schema.sql
 #../../xf-system/sp/drop_objects/sp_xf_system_drop_all_constraints_in_schema.sql
 #../../xf-system/sp/drop_objects/sp_xf_system_drop_all_unique_check_default_constraints_in_schema.sql
 ../../xf-system/sp/drop_objects/sp_xf_system_drop_all_objects_in_schema.sql
+../../xf-system/sp/drop_objects/sp_xf_system_execute_etl.sql
 
 ../functions/fn_get_obs_value_column.sql
 ../functions/fn_calculate_agegroup.sql

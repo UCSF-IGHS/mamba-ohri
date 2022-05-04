@@ -21,7 +21,7 @@ SELECT
     sub_county,
     ward
 FROM dim_client c
-INNER JOIN encounter_hts hts
+INNER JOIN flat_encounter_hts hts
     ON c.client_id = hts.client_id;
 
 
