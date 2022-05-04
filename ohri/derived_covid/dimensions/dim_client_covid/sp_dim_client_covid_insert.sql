@@ -3,7 +3,7 @@ USE analysis;
 
 -- $BEGIN
 
-INSERT INTO covid_dim_client (
+INSERT INTO dim_client_covid (
         client_id,
         date_of_birth,
         ageattest,
@@ -21,7 +21,7 @@ SELECT
     sub_county,
     ward
 FROM dim_client c
-INNER JOIN encounter_covid cd
+INNER JOIN flat_encounter_covid cd
     ON c.client_id = cd.client_id;
 
 

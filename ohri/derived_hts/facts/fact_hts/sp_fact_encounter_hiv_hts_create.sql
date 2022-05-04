@@ -2,11 +2,11 @@
 
 USE analysis;
 
-DROP TABLE IF EXISTS hiv_hts_fact_encounter;
+DROP TABLE IF EXISTS fact_encounter_hiv_hts;
 
 -- $BEGIN
 
-create table hiv_hts_fact_encounter(
+create table fact_encounter_hiv_hts(
     id   int auto_increment,
     encounter_id              int  null,
     client_id                 int null,

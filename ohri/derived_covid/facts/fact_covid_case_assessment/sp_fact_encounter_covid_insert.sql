@@ -3,7 +3,7 @@ USE analysis;
 
 -- $BEGIN
 
-INSERT INTO covid_fact_encounter (
+INSERT INTO fact_encounter_covid (
     encounter_id ,
     client_id,
     covid_test,
@@ -139,7 +139,7 @@ SELECT
     patient_outcome,
     cast(date_recovered as date)date_recovered,
     cast(date_died as date)date_died
-FROM encounter_covid;
+FROM flat_encounter_covid;
 
 
 -- $END

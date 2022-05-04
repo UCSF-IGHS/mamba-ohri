@@ -57,6 +57,6 @@ SET @column_labels = (
        'comorbidity_other'
     ));
 
-CALL sp_multiselect_values_update('encounter_covid', @column_labels, '1', '0');
+CALL sp_multiselect_values_update('flat_encounter_covid', @column_labels, '1', '0');
 
 -- $END

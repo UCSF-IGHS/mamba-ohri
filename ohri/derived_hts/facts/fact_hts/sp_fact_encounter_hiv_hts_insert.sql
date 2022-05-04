@@ -3,7 +3,7 @@ USE analysis;
 
 -- $BEGIN
 
-INSERT INTO hiv_hts_fact_encounter (
+INSERT INTO fact_encounter_hiv_hts (
     encounter_id,
     client_id,
     date_tested,
@@ -122,7 +122,7 @@ select hts.encounter_id,`hts`.`client_id`   AS `client_id`,
     recency_test_type,
     recency_vl_result,
     recency_rtri_result
-from `analysis`.`encounter_hts` `hts`;
+from `analysis`.`flat_encounter_hts` `hts`;
 
 
 -- $END

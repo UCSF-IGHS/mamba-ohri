@@ -3,7 +3,7 @@ USE analysis;
 
 -- $BEGIN
 
-INSERT INTO hiv_hts_dim_client (
+INSERT INTO dim_client_hiv_hts (
         client_id,
         date_of_birth,
         ageattest,
@@ -21,7 +21,7 @@ SELECT
     sub_county,
     ward
 FROM dim_client c
-INNER JOIN encounter_hts hts
+INNER JOIN flat_encounter_hts hts
     ON c.client_id = hts.client_id;
 
 
