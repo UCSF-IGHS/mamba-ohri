@@ -49,15 +49,11 @@ select hts.encounter_id,`hts`.`client_id`   AS `client_id`,
         when 'False' then 'No'
     else NULL end AS consent,
     case community_service_point
-        when 'Drop In Centre' then 'Drop In Centre'
-        when 'Workplace' then 'Workplace'
-        when 'Hotspot' then 'Hotspot'
         when 'mobile voluntary counseling and testing program' then 'Mobile VCT'
         when 'Home based HIV testing program' then 'Homebased'
         when 'Outreach Program' then 'Outreach'
-        when 'Voluntary Counselling and Testing Centre' then 'VCT'
-        when 'Unknown' then 'Unknown'
-        when 'Other' then 'Other'
+        when 'Voluntary counseling and testing center' then 'VCT'
+
     else community_service_point end as community_service_point,
     pop_type,
     case
@@ -80,10 +76,10 @@ select hts.encounter_id,`hts`.`client_id`   AS `client_id`,
         when 'Post Natal Program' then 'PNC'
         when 'Family Planning Clinic' then 'FP Clinic'
         when 'Antenatal program' then 'ANC'
-        when 'Sexually transmitted infection program/clinic' then 'STI clinic'
-        when 'Tuberculosis treatment program' then 'TB clinic'
+        when 'Sexually transmitted infection program/clinic' then 'STI Clinic'
+        when 'Tuberculosis treatment program' then 'TB Clinic'
         when 'Labor and delivery unit' then 'L&D'
-        when 'Other' then 'Other clinic'
+        when 'Other' then 'Other Clinics'
     else facility_service_point end as facility_service_point,
     case hts_approach
         when 'Client Initiated Testing and Counselling' then 'CITC'
