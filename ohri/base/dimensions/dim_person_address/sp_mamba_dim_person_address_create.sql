@@ -14,5 +14,7 @@ CREATE TABLE mamba_dim_person_address (
     address2 NVARCHAR(255) NULL,
     PRIMARY KEY (person_address_id)
 );
+create index mamba_dim_person_address_external_person_id_index
+    on mamba_dim_person_address (external_person_id);
 
 -- $END
