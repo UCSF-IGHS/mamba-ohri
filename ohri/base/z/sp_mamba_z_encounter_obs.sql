@@ -27,6 +27,11 @@ SELECT o.encounter_id   AS encounter_id,
        NULL             AS encounter_type_uuid
 FROM openmrs_dev.obs o;
 
+create index mamba_z_encounter_obs_encounter_id_type_uuid_person_id_index
+    on mamba_z_encounter_obs (encounter_id, encounter_type_uuid, person_id);
+
+create index mamba_z_encounter_obs_encounter_type_uuid_index
+    on mamba_z_encounter_obs (encounter_type_uuid);
 
 -- update obs question UUIDs
 UPDATE mamba_z_encounter_obs z
@@ -36,17 +41,17 @@ SET z.obs_question_uuid = c.uuid
 WHERE TRUE;
 
 -- update obs answer UUIDs
-UPDATE mamba_z_encounter_obs z
-    INNER JOIN mamba_dim_concept c
-    ON z.obs_question_concept_id = c.external_concept_id
-    INNER JOIN mamba_dim_concept_datatype dt
-    ON dt.external_datatype_id = c.external_datatype_id
-SET z.obs_answer_uuid = (IF(dt.datatype_name = 'Coded',
-                            (SELECT c.uuid
-                             FROM mamba_dim_concept c
-                             where c.external_concept_id = z.obs_value_coded AND z.obs_value_coded IS NOT NULL),
-                            c.uuid))
-WHERE TRUE;
+-- UPDATE mamba_z_encounter_obs z
+    -- INNER JOIN mamba_dim_concept c
+    -- -- ON z.obs_question_concept_id = c.external_concept_id
+    -- INNER JOIN mamba_dim_concept_datatype dt
+    -- ON dt.external_datatype_id = c.external_datatype_id
+-- SET z.obs_answer_uuid = (IF(dt.datatype_name = 'Coded',
+                            -- (SELECT c.uuid
+                             -- FROM mamba_dim_concept c
+                            --  where c.external_concept_id = z.obs_value_coded AND z.obs_value_coded IS NOT NULL),
+                            -- c.uuid))
+-- WHERE TRUE;
 
 -- update obs_value_coded (UUIDs & values)
 UPDATE mamba_z_encounter_obs z
