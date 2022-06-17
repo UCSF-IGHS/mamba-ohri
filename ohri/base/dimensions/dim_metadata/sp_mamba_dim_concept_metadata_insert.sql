@@ -212,6 +212,23 @@ SET @report_data = '
          }
       },
       {
+         "report_name":"CT ART Therapy",
+         "flat_table_name":"flat_encounter_arttherapy",
+         "encounter_type_uuid":"74bf4fe6-8fdb-4228-be39-680a93a9cf6d",
+         "table_columns":{
+            "art_plan" : "7557d77c-172b-4673-9335-67a38657dd01",
+            "artstart_date" : "159599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "regimen" : "dfbe256e-30ba-4033-837a-2e8477f2e7cd",
+            "regimen_line" : "164515AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "regimenline_switched_date" : "164516AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "regimen_substituted_date" : "164431AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "art_stop_reason" : "1252AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "art_stop_date" : "160739AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "art_restart_date" : "160738AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "notes" : "165095AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+         }
+      },
+      {
          "report_name":"UgandaEMR HTS Report",
          "flat_table_name":"flat_encounter_ugemr_hts",
          "encounter_type_uuid":"264daIZd-f80e-48fe-nba9-P37f2W1905Pv",

@@ -51,4 +51,8 @@ CALL sp_fact_hts_encounter;
 
 CALL sp_fact_covid_encounter;
 
+CALL sp_fact_ugemr_hts_encounter;
+
+CALL sp_fact_patientenrolment_encounter;
+
 -- $END
