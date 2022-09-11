@@ -53,10 +53,11 @@ BEGIN
         WHERE e.encounter_type = computed_obs_encounter_type AND e.patient_id = patientid;
 
         -- Get conceptId that specifies the actual outcome
-        SELECT CASE WHEN name like '%Positive%' then concept_id end as pos_con,
+        SELECT
+            CASE WHEN name like '%Positive%' then concept_id end as pos_con,
             CASE WHEN name like '%Negative%' then concept_id end as Neg_con,
             CASE WHEN name like '%Inconclusive%' then concept_id end as unk_con
-        INTO hiv_positive_concept_id,hiv_negative_concept_id,hiv_unknown_concept_id
+        INTO hiv_positive_concept_id, hiv_negative_concept_id, hiv_unknown_concept_id
         FROM concept_name
             WHERE concept_id = finalhiv_status and locale ='en' and locale_preferred=1 and voided=0
             LIMIT 1;
