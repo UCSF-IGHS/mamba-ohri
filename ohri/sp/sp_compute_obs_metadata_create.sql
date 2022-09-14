@@ -14,7 +14,7 @@ BEGIN
         obs_encounter_type_id          INT          NOT NULL, --
         concept_id                     INT          NOT NULL,
         compute_procedure_name         NVARCHAR(50) NOT NULL,
-        concept_label                  NVARCHAR(50) NOT NULL,
+        concept_label                  NVARCHAR(50) NOT NULL UNIQUE,
         concept_description            NVARCHAR(255)
     );
 
