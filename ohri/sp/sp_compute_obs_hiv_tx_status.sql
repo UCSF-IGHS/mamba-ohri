@@ -46,6 +46,23 @@ BEGIN
         LEAVE sp;
     END IF;
 
+    -- Fetch the saved computed Obs Encounter Id for this Patient
+    SELECT e.encounter_id INTO computed_obs_encounter_id FROM encounter e
+        WHERE e.encounter_type = computed_obs_encounter_type AND e.patient_id = patientid;
+
+    -- Create a new computed Obs Encounter for this patient
+    IF computed_obs_encounter_id IS NULL THEN
+
+        INSERT INTO encounter(encounter_type, patient_id, encounter_datetime, creator, date_created, uuid)
+            VALUES (computed_obs_encounter_type, patientid, NOW(), 1, NOW(), UUID());
+
+        -- Set the computed obs encounter id with the newly persisted computed Obs Encounter id
+        SELECT encounter_id INTO computed_obs_encounter_id FROM encounter e
+            WHERE encounter_type = computed_obs_encounter_type AND e.patient_id = patientid
+        ORDER BY encounter_id DESC LIMIT 1;
+
+    END IF;
+
     -- Fetch the currently stored HIV TX Status Id & Value that was previously computed (if any) for this patient
     SELECT o.concept_id, o.value_coded INTO status_concept, status_value_old FROM obs o
         INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
