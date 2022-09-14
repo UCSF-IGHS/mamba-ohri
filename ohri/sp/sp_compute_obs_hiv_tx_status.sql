@@ -63,12 +63,16 @@ BEGIN
 
     END IF;
 
+    -- Init hiv_tx_status
+    SELECT m.concept_id INTO status_concept FROM mamba_obs_compute_metadata m
+        WHERE m.concept_label = 'hiv_tx_status' AND m.computed_obs_encounter_type_id = computed_obs_encounter_type
+    LIMIT 1;
+
     -- Fetch the currently stored HIV TX Status Id & Value that was previously computed (if any) for this patient
-    SELECT o.concept_id, o.value_coded INTO status_concept, status_value_old FROM obs o
-        INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
+    SELECT o.value_coded INTO status_value_old FROM obs o
         INNER JOIN encounter e on o.encounter_id = e.encounter_id
-        WHERE m.concept_label = 'hiv_tx_status'
-          AND e.encounter_type = m.computed_obs_encounter_type_id AND o.person_id = patientid
+        WHERE o.concept_id = status_concept
+          AND e.encounter_type = computed_obs_encounter_type AND o.person_id = patientid
     ORDER BY obs_id DESC LIMIT 1;
 
     -- Init hiv_tx_status_deceased
@@ -76,7 +80,7 @@ BEGIN
         WHERE m.concept_label = 'hiv_tx_status_deceased' AND m.obs_encounter_type_id = concept_encounter_type;
 
     -- This Patient already has a computed 'DECEASED' tx_status
-    IF(status_value_old = deceased) THEN
+    IF(status_value_old IS NOT NULL AND (status_value_old = deceased)) THEN
         LEAVE sp;
     END IF;
 
