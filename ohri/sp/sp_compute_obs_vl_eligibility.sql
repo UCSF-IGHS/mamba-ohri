@@ -34,8 +34,18 @@ BEGIN
     DECLARE regimen_line_id INT;
     DECLARE artstart_date DATETIME DEFAULT NULL;
     DECLARE three_months INT DEFAULT 90;
+    DECLARE twelve_months INT DEFAULT 360;
     DECLARE six_months INT DEFAULT 180;
     DECLARE eighteen_months INT DEFAULT 540;
+    DECLARE pregnancy_status INT;
+    DECLARE breastfeeding_status INT;
+    DECLARE artstart_date DATETIME DEFAULT NULL;
+    DECLARE date_of_last_menstrual_period DATETIME;
+    DECLARE vl_copies INT;
+    DECLARE vl_result INT DEFAULT NULL;
+    DECLARE vl_result_copies_suppressed INT DEFAULT 50 ;
+    DECLARE vl_result_date DATETIME DEFAULT NULL;
+    DECLARE delivery_date DATETIME DEFAULT NULL;
 
 
     -- Initialise all relevant variables
@@ -51,7 +61,9 @@ BEGIN
     -- Select details below if this patient is in the tx_curr list
     select age, gender, pregancy_status, date_pregnant, recent_vl_date, recent_vl_result,
            current_regimen, current_regimen_line, art_start_date, pediatrics_pcr_result, recent_adherence_couselling_date,
-           is_breastfeeding FROM obs o INNER JOIN ;
+           breastfeeding_status FROM obs o INNER JOIN ;
+
+    -- Remove this Patient from vl_eligibility list (if they exist there and have falteredonconditions)
 
     -- Don't Compute if obs is not computable (i.e. we didn't find a procedure name)
     -- If above result returns empty/null, exit
@@ -59,10 +71,100 @@ BEGIN
         LEAVE sp;
     END IF;
 
-    -- less than 6months on ART
+    -- Fetch Pregnancy status
+    SELECT o.value_coded INTO pregnancy_status FROM obs o
+        INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
+        WHERE m.concept_label = 'pregnancy_status' AND m.compute_procedure_name = compute_procedure
+            AND o.person_id = patientid AND o.value_coded IS NOT NULL
+    ORDER BY obs_id DESC LIMIT 1;
+
+    -- Fetch Breastfeeding status
+    SELECT o.value_coded INTO breastfeeding_status FROM obs o
+        INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
+        WHERE m.concept_label = 'currently_breastfeeding' AND m.compute_procedure_name = compute_procedure
+            AND o.person_id = patientid AND o.value_coded IS NOT NULL
+    ORDER BY obs_id DESC LIMIT 1;
+
+    -- Fetch Date of last menstrual Period
+    SELECT o.value_datetime INTO date_of_last_menstrual_period FROM obs o
+        INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
+        WHERE m.concept_label = 'date_of_last_menstrual_period' AND m.compute_procedure_name = compute_procedure
+            AND o.person_id = patientid AND o.value_datetime IS NOT NULL
+    ORDER BY obs_id DESC LIMIT 1;
+
+    -- Fetch VL copies
+    SELECT o.value_numeric INTO vl_copies FROM obs o
+        INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
+        WHERE m.concept_label = 'vl_copies' AND m.compute_procedure_name = 'sp_compute_obs_vl_suppression'
+            AND o.person_id = patientid AND o.value_numeric IS NOT NULL
+    ORDER BY obs_id DESC LIMIT 1;
+
+    -- Fetch VL Result
+    SELECT o.value_coded INTO vl_result FROM obs o
+        INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
+        WHERE m.concept_label = 'vl_result' AND m.compute_procedure_name = 'sp_compute_obs_vl_suppression'
+            AND o.person_id = patientid AND o.value_coded IS NOT NULL
+    ORDER BY obs_id DESC LIMIT 1;
+
+    -- Fetch Date VL Results received
+    SELECT o.value_datetime INTO vl_result_date FROM obs o
+        INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
+        WHERE m.concept_label = 'vl_result_date' AND m.compute_procedure_name = 'sp_compute_obs_vl_suppression'
+            AND o.person_id = patientid AND o.value_datetime IS NOT NULL
+    ORDER BY obs_id DESC LIMIT 1;
+
+    -- Delivery Date = LMP(Date) + 238 days
+    IF(date_of_last_menstrual_period IS NOT NULL) THEN
+        SET delivery_date = ADDDATE(date_of_last_menstrual_period, 238);
+    END IF;
+
+    -- Remove Pregnant women whose LMP occurred after starting ART and have less than 90 days on ART
+     IF (DATEDIFF(NOW(), artstart_date) < three_months AND date_of_last_menstrual_period > artstart_date) THEN
+        LEAVE sp;
+     END IF;
+
+    -- Remove pregnant women whose LMP occurred after starting ART and: Today’s date - LMP < 21 days
+     IF (DATEDIFF(date_of_last_menstrual_period, artstart_date) > 0 AND DATEDIFF(NOW(), date_of_last_menstrual_period) < 21) THEN
+        LEAVE sp;
+     END IF;
+
+    -- Remove pregnant women whose LMP occurred before starting ART and have  <238 days since their last LMP
+     IF (DATEDIFF(date_of_last_menstrual_period, artstart_date) < 0 AND DATEDIFF(NOW(), date_of_last_menstrual_period) < 238) THEN
+        LEAVE sp;
+     END IF;
+
+    -- Remove patients who have been on ART for less than 180 days
      IF (DATEDIFF(NOW(), artstart_date) < six_months) THEN
         LEAVE sp;
      END IF;
+
+    -- Remove all patients with a valid viral load result done within the last 3 months regardless of the outcome.
+     IF (vl_result IS NOT NULL AND vl_result_date IS NOT NULL AND DATEDIFF(NOW(), vl_result_date) < three_months) THEN
+        LEAVE sp;
+     END IF;
+
+    -- Remove all patients who are suppressed in the last 12 months, i.e VL result <=50 copies/mL.
+      IF (vl_result IS NOT NULL AND vl_result_date IS NOT NULL
+              AND DATEDIFF(NOW(), vl_result_date) < twelve_months
+              AND vl_copies <= vl_result_copies_suppressed) THEN
+        LEAVE sp;
+     END IF;
+
+      -- Remove all patients whose last VL was >51 copies/mL and the duration since their last VL is less than 90 days
+      IF (vl_result IS NOT NULL AND vl_result_date IS NOT NULL
+              AND DATEDIFF(NOW(), vl_result_date) < three_months
+              AND vl_copies <= 51) THEN
+        LEAVE sp;
+     END IF;
+
+     -- Remove breastfeeding mothers who:  within 90 days of delivery, they have a viral load result.
+     IF (DATEDIFF(NOW(), date_of_last_menstrual_period) < three_months) THEN
+        LEAVE sp;
+     END IF;
+
+
+
+
 
     -- younger than 18months (remove pcr -ve at 6weeks)
      IF (age < eighteen_months AND pediatrics_pcr_result = 'Negative') THEN
@@ -200,3 +302,4 @@ END;
 //
 
 DELIMITER ;
+
