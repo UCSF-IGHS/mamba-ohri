@@ -1,13 +1,12 @@
--- Scheduler / Event fired every 1 minute to compute & insert/update
+-- Fetches Transactions from Queue Table and calls appropriate Trigger
 
 DELIMITER //
 
-DROP EVENT IF EXISTS SCHEDULE_COMPUTED_OBS;
+DROP PROCEDURE IF EXISTS sp_compute_obs_scheduler;
 
-CREATE EVENT IF NOT EXISTS SCHEDULE_COMPUTED_OBS
-    ON SCHEDULE
-        EVERY 1 MINUTE
-    DO BEGIN
+CREATE PROCEDURE sp_compute_obs_scheduler()
+
+BEGIN
 
     DECLARE encounterid INT;
     DECLARE conceptid INT;
