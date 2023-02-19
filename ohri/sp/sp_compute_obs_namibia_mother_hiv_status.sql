@@ -19,7 +19,11 @@ BEGIN
     DECLARE computed_obs_value_curr INT;
     DECLARE computed_obs_value_new INT;
 
-    DECLARE deceased INT;
+    DECLARE ptracker_id_concept INT;
+
+
+
+
     DECLARE transfer_out INT;
     DECLARE interrupted INT;
 
@@ -67,8 +71,11 @@ BEGIN
     END IF;
 
     -- Fetch the saved computed Obs Encounter Id (for PMTCT computed obs Encounter type) for this Patient
-    SELECT e.encounter_id INTO computed_obs_encounter_id FROM encounter e
-    WHERE e.encounter_type = computed_obs_encounter_type AND e.patient_id = patientid;
+    SELECT e.encounter_id
+    INTO computed_obs_encounter_id
+    FROM encounter e
+    WHERE e.encounter_type = computed_obs_encounter_type
+      AND e.patient_id = patientid;
 
     -- Create a new computed Obs Encounter for this patient (if none exists)
     IF computed_obs_encounter_id IS NULL THEN
@@ -77,43 +84,35 @@ BEGIN
         VALUES (computed_obs_encounter_type, patientid, NOW(), 1, NOW(), UUID());
 
         -- Set the computed obs encounter id with the newly persisted computed Obs Encounter id
-        SELECT encounter_id INTO computed_obs_encounter_id FROM encounter e
-        WHERE encounter_type = computed_obs_encounter_type AND e.patient_id = patientid
-        ORDER BY encounter_id DESC LIMIT 1;
+        SELECT encounter_id
+        INTO computed_obs_encounter_id
+        FROM encounter e
+        WHERE encounter_type = computed_obs_encounter_type
+          AND e.patient_id = patientid
+        ORDER BY encounter_id DESC
+        LIMIT 1;
 
     END IF;
 
+    -- Init computed obs ID - computed_mother_hiv_status
+    SELECT m.concept_id
+    INTO computed_obs_concept
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'computed_mother_hiv_status';
+
+    -- Init the corresponding pTrackerId obs ID
+    SELECT m.concept_id
+    INTO ptracker_id_concept
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'ptracker_id';
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    -- Fetch the saved computed Obs Encounter Id for this Patient
-    SELECT e.encounter_id
-    INTO computed_obs_encounter_id
-    FROM encounter e
-    WHERE e.encounter_type = computed_obs_encounter_type
-      AND e.patient_id = patientid;
-
-    -- Fetch the currently stored computed Obs for the Mother's HIV status TX Status Id & Value that was previously computed (if any) for this patient
+    -- Fetch the currently stored computed Obs for the Mother's HIV status Value that was previously computed (if any) for this patient
     SELECT o.value_coded
     INTO computed_obs_value_curr
     FROM obs o
-             INNER JOIN encounter e on o.encounter_id = e.encounter_id
-    WHERE o.concept_id = computed_obs_concept
-      AND e.encounter_type = computed_obs_encounter_type
+    WHERE o.encounter_id = computed_obs_encounter_id
+      AND o.concept_id = computed_obs_concept
       AND o.person_id = patientid
     ORDER BY obs_id DESC
     LIMIT 1;
@@ -129,18 +128,14 @@ BEGIN
     ORDER BY obs_id DESC
     LIMIT 1;
 
-    -- Init mother_hiv_status
-    SELECT m.concept_id
-    INTO computed_obs_concept
-    FROM mamba_obs_compute_metadata m
-    WHERE m.concept_label = 'computed_mother_hiv_status';
 
     -- Fetch Pregnancy status
-    SELECT o.value_coded
-    INTO pregnancy_status
+    SELECT o.value_text
+    INTO ptracker_id
     FROM obs o
              INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'pregnancy_status'
+    WHERE m.concept_label = 'ptracker_id'
+      AND o.encounter_id=ptracker_id_concept
       AND m.compute_procedure_name = compute_procedure
       AND o.person_id = patientid
       AND o.value_coded IS NOT NULL
