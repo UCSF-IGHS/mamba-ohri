@@ -1,4 +1,3 @@
-
 DELIMITER //
 
 DROP PROCEDURE IF EXISTS sp_compute_obs_queue_insert;
@@ -29,16 +28,25 @@ BEGIN
             LEAVE get_computation;
         END IF;
 
-        SELECT s.computed INTO compute_status FROM mamba_computed_obs_queue s WHERE s.compute_procedure_name = compute_sp_name
-            AND s.patient_id = person_id AND s.encounter_id = obs_encounter_id AND s.concept_id = obs_concept_id;
+        SELECT s.computed
+        INTO compute_status
+        FROM mamba_computed_obs_queue s
+        WHERE s.compute_procedure_name = compute_sp_name
+          AND s.patient_id = person_id
+          AND s.encounter_id = obs_encounter_id
+          AND s.concept_id = obs_concept_id;
 
         IF compute_status IS NULL THEN
             INSERT INTO mamba_computed_obs_queue(patient_id, concept_id, encounter_id, compute_procedure_name)
             VALUES (person_id, obs_concept_id, obs_encounter_id, compute_sp_name);
 
         ELSEIF compute_status = 1 THEN
-            UPDATE mamba_computed_obs_queue s SET s.computed = 0 WHERE s.compute_procedure_name = compute_sp_name
-              AND s.patient_id = person_id AND s.encounter_id = obs_encounter_id AND s.concept_id = obs_concept_id;
+            UPDATE mamba_computed_obs_queue s
+            SET s.computed = 0
+            WHERE s.compute_procedure_name = compute_sp_name
+              AND s.patient_id = person_id
+              AND s.encounter_id = obs_encounter_id
+              AND s.concept_id = obs_concept_id;
 
         END IF;
 
