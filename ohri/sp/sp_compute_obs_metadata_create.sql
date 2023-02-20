@@ -7,17 +7,15 @@ DROP PROCEDURE IF EXISTS sp_compute_obs_metadata_create;
 CREATE PROCEDURE sp_compute_obs_metadata_create()
 BEGIN
 
-    select * from mamba_obs_compute_metadata;
-
     CREATE TABLE mamba_obs_compute_metadata
     (
         id                             INT PRIMARY KEY AUTO_INCREMENT,
-        computed_obs_encounter_type_id INT          NOT NULL,
-        obs_encounter_type_id          INT          NOT NULL, --
-        concept_id                     INT          NOT NULL,
-        compute_procedure_name         NVARCHAR(50) NOT NULL,
-        concept_label                  NVARCHAR(50) NOT NULL UNIQUE,
-        concept_description            NVARCHAR(255),
+        computed_obs_encounter_type_id INT           NULL,
+        obs_encounter_type_id          INT           NULL,
+        concept_id                     INT           NOT NULL,
+        compute_procedure_name         NVARCHAR(50)  NULL,
+        concept_label                  NVARCHAR(50)  NOT NULL UNIQUE,
+        concept_description            NVARCHAR(255) NULL,
 
         constraint sp_concept_label
             unique (compute_procedure_name, concept_label)

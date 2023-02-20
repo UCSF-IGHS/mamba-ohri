@@ -20,36 +20,18 @@ BEGIN
     DECLARE computed_obs_value_new INT;
 
     DECLARE ptracker_id_concept INT;
+    DECLARE ptracker_id_value INT;
 
+    DECLARE hiv_positive INT;
+    DECLARE hiv_negative INT;
+    DECLARE hiv_status_unknown INT;
+    DECLARE hiv_status_missing INT;
+    DECLARE previously_known_hiv_positive INT;
+    DECLARE hiv_test_done_in_this_visit INT;
+    DECLARE hiv_test_not_done_in_this_visit INT;
 
-
-
-    DECLARE transfer_out INT;
-    DECLARE interrupted INT;
-
-    DECLARE death_date DATETIME DEFAULT NULL;
-    DECLARE enrollment_date DATETIME DEFAULT NULL;
-    DECLARE re_enrollment_date DATETIME DEFAULT NULL;
-    DECLARE transfer_out_date DATETIME DEFAULT NULL;
-    DECLARE next_appointment_date DATETIME DEFAULT NULL;
-
-
-    DECLARE regimen_id INT;
-    DECLARE regimen_line_id INT;
-    DECLARE artstart_date DATETIME DEFAULT NULL;
-    DECLARE three_months INT DEFAULT 90;
-    DECLARE twelve_months INT DEFAULT 360;
-    DECLARE six_months INT DEFAULT 180;
-    DECLARE eighteen_months INT DEFAULT 540;
-    DECLARE pregnancy_status INT;
-    DECLARE breastfeeding_status INT;
-    DECLARE artstart_date DATETIME DEFAULT NULL;
-    DECLARE date_of_last_menstrual_period DATETIME;
-    DECLARE vl_copies INT;
-    DECLARE vl_result INT DEFAULT NULL;
-    DECLARE vl_result_copies_suppressed INT DEFAULT 50;
-    DECLARE vl_result_date DATETIME DEFAULT NULL;
-    DECLARE delivery_date DATETIME DEFAULT NULL;
+    DECLARE hiv_test_result INT;
+    DECLARE hiv_test_status_answer INT;
 
     -- Initialise all relevant variables
     SELECT m.computed_obs_encounter_type_id,
@@ -70,12 +52,29 @@ BEGIN
         LEAVE sp;
     END IF;
 
+    -- Init the corresponding pTrackerId obs ID concept
+    SELECT m.concept_id
+    INTO ptracker_id_concept
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'ptracker_id';
+
+    -- Init the corresponding pTrackerId obs ID Value
+    SELECT o.value_text
+    INTO ptracker_id_value
+    FROM obs o
+    WHERE o.concept_id = ptracker_id_concept
+      AND o.encounter_id = encounterid
+      AND o.person_id = patientid;
+
     -- Fetch the saved computed Obs Encounter Id (for PMTCT computed obs Encounter type) for this Patient
-    SELECT e.encounter_id
+    SELECT DISTINCT (e.encounter_id)
     INTO computed_obs_encounter_id
-    FROM encounter e
+    FROM obs o
+             INNER JOIN encounter e on o.encounter_id = e.encounter_id
     WHERE e.encounter_type = computed_obs_encounter_type
-      AND e.patient_id = patientid;
+      AND e.patient_id = patientid
+      AND o.concept_id = ptracker_id_concept
+      AND o.value_text = ptracker_id_value;
 
     -- Create a new computed Obs Encounter for this patient (if none exists)
     IF computed_obs_encounter_id IS NULL THEN
@@ -84,13 +83,14 @@ BEGIN
         VALUES (computed_obs_encounter_type, patientid, NOW(), 1, NOW(), UUID());
 
         -- Set the computed obs encounter id with the newly persisted computed Obs Encounter id
-        SELECT encounter_id
+        SELECT DISTINCT (e.encounter_id)
         INTO computed_obs_encounter_id
-        FROM encounter e
-        WHERE encounter_type = computed_obs_encounter_type
+        FROM obs o
+                 INNER JOIN encounter e on o.encounter_id = e.encounter_id
+        WHERE e.encounter_type = computed_obs_encounter_type
           AND e.patient_id = patientid
-        ORDER BY encounter_id DESC
-        LIMIT 1;
+          AND o.concept_id = ptracker_id_concept
+          AND o.value_text = ptracker_id_value;
 
     END IF;
 
@@ -100,310 +100,130 @@ BEGIN
     FROM mamba_obs_compute_metadata m
     WHERE m.concept_label = 'computed_mother_hiv_status';
 
-    -- Init the corresponding pTrackerId obs ID
-    SELECT m.concept_id
-    INTO ptracker_id_concept
-    FROM mamba_obs_compute_metadata m
-    WHERE m.concept_label = 'ptracker_id';
-
-
-    -- Fetch the currently stored computed Obs for the Mother's HIV status Value that was previously computed (if any) for this patient
+    -- Fetch the currently stored computed Obs for the Mother's HIV status Value that was previously computed (if any) for this Patient
     SELECT o.value_coded
     INTO computed_obs_value_curr
     FROM obs o
     WHERE o.encounter_id = computed_obs_encounter_id
       AND o.concept_id = computed_obs_concept
       AND o.person_id = patientid
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-
-    -- Fetch the saved (computed) Regimen date for this Patient
-    SELECT o.obs_datetime
-    INTO previous_regimen_date
-    FROM obs o
-    WHERE o.encounter_id = computed_obs_encounter_id
-      AND o.concept_id = regimen_id
-      AND o.person_id = patientid
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-
-    -- Fetch Pregnancy status
-    SELECT o.value_text
-    INTO ptracker_id
-    FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'ptracker_id'
-      AND o.encounter_id=ptracker_id_concept
-      AND m.compute_procedure_name = compute_procedure
-      AND o.person_id = patientid
       AND o.value_coded IS NOT NULL
     ORDER BY obs_id DESC
     LIMIT 1;
 
-    -- Fetch Breastfeeding status
+    -- Init hiv_positive
+    SELECT DISTINCT (m.concept_id)
+    INTO hiv_positive
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'hiv_positive'
+      and m.obs_encounter_type_id = 0;
+
+    -- This Patient already has a computed 'HIV Positive' computed_mother_hiv_status
+    IF (computed_obs_value_curr IS NOT NULL AND (computed_obs_value_curr = hiv_positive)) THEN
+        LEAVE sp;
+    END IF;
+
+    -- Init previously_known_hiv_positive
+    SELECT DISTINCT (m.concept_id)
+    INTO previously_known_hiv_positive
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'previously_known_hiv_positive'
+      and m.obs_encounter_type_id = 0;
+
+    -- Init hiv_test_done_in_this_visit
+    SELECT DISTINCT (m.concept_id)
+    INTO hiv_test_done_in_this_visit
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'hiv_test_done_in_this_visit'
+      and m.obs_encounter_type_id = 0;
+
+    -- Init hiv_test_not_done_in_this_visit
+    SELECT DISTINCT (m.concept_id)
+    INTO hiv_test_not_done_in_this_visit
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'hiv_test_not_done_in_this_visit'
+      and m.obs_encounter_type_id = 0;
+
+    -- Init hiv_test_result
+    SELECT DISTINCT (m.concept_id)
+    INTO hiv_test_result
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'hiv_test_result'
+      and m.obs_encounter_type_id = 0;
+
+    -- Init hiv_status_unknown
+    SELECT DISTINCT (m.concept_id)
+    INTO hiv_status_unknown
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'hiv_status_unknown'
+      and m.obs_encounter_type_id = 0;
+
+    -- Init hiv_status_missing
+    SELECT DISTINCT (m.concept_id)
+    INTO hiv_status_missing
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'hiv_status_missing'
+      and m.obs_encounter_type_id = 0;
+
+    -- Init hiv_negative
+    SELECT DISTINCT (m.concept_id)
+    INTO hiv_negative
+    FROM mamba_obs_compute_metadata m
+    WHERE m.concept_label = 'hiv_negative'
+      and m.obs_encounter_type_id = 0;
+
+    -- Fetch the Response to the HIV Test performed obs question in this Encounter
     SELECT o.value_coded
-    INTO breastfeeding_status
+    INTO hiv_test_status_answer
     FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'currently_breastfeeding'
-      AND m.compute_procedure_name = compute_procedure
+    WHERE o.concept_id = conceptid
+      AND o.encounter_id = encounterid
       AND o.person_id = patientid
-      AND o.value_coded IS NOT NULL
     ORDER BY obs_id DESC
     LIMIT 1;
 
-    -- Fetch Date of last menstrual Period
-    SELECT o.value_datetime
-    INTO date_of_last_menstrual_period
-    FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'date_of_last_menstrual_period'
-      AND m.compute_procedure_name = compute_procedure
-      AND o.person_id = patientid
-      AND o.value_datetime IS NOT NULL
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-    -- Fetch VL copies
-    SELECT o.value_numeric
-    INTO vl_copies
-    FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'vl_copies'
-      AND m.compute_procedure_name = 'sp_compute_obs_vl_suppression'
-      AND o.person_id = patientid
-      AND o.value_numeric IS NOT NULL
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-    -- Fetch VL Result
-    SELECT o.value_coded
-    INTO vl_result
-    FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'vl_result'
-      AND m.compute_procedure_name = 'sp_compute_obs_vl_suppression'
-      AND o.person_id = patientid
-      AND o.value_coded IS NOT NULL
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-    -- Fetch Date VL Results received
-    SELECT o.value_datetime
-    INTO vl_result_date
-    FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'vl_result_date'
-      AND m.compute_procedure_name = 'sp_compute_obs_vl_suppression'
-      AND o.person_id = patientid
-      AND o.value_datetime IS NOT NULL
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-    -- Delivery Date = LMP(Date) + 238 days
-    IF (date_of_last_menstrual_period IS NOT NULL) THEN
-        SET delivery_date = ADDDATE(date_of_last_menstrual_period, 238);
+    -- Set 'UNKNOWN' if (Not tested for HIV during this visit)
+    IF (hiv_test_status_answer IS NOT NULL AND hiv_test_status_answer = hiv_test_not_done_in_this_visit) THEN
+        SET computed_obs_value_new = hiv_status_unknown;
     END IF;
 
-    -- Remove Pregnant women whose LMP occurred after starting ART and have less than 90 days on ART
-    IF (DATEDIFF(NOW(), artstart_date) < three_months AND date_of_last_menstrual_period > artstart_date) THEN
-        LEAVE sp;
+    -- Set 'MISSING' if (Missing)
+    IF (hiv_test_status_answer IS NOT NULL AND hiv_test_status_answer = hiv_status_missing) THEN
+        SET computed_obs_value_new = hiv_status_missing;
     END IF;
 
-    -- Remove pregnant women whose LMP occurred after starting ART and: Today’s date - LMP < 21 days
-    IF (DATEDIFF(date_of_last_menstrual_period, artstart_date) > 0 AND
-        DATEDIFF(NOW(), date_of_last_menstrual_period) < 21) THEN
-        LEAVE sp;
+    -- Set 'PREV. +VE' if (Previously known Positive)
+    IF (hiv_test_status_answer IS NOT NULL AND hiv_test_status_answer = previously_known_hiv_positive) THEN
+        SET computed_obs_value_new = previously_known_hiv_positive;
     END IF;
-
-    -- Remove pregnant women whose LMP occurred before starting ART and have  <238 days since their last LMP
-    IF (DATEDIFF(date_of_last_menstrual_period, artstart_date) < 0 AND
-        DATEDIFF(NOW(), date_of_last_menstrual_period) < 238) THEN
-        LEAVE sp;
-    END IF;
-
-    -- Remove patients who have been on ART for less than 180 days
-    IF (DATEDIFF(NOW(), artstart_date) < six_months) THEN
-        LEAVE sp;
-    END IF;
-
-    -- Remove all patients with a valid viral load result done within the last 3 months regardless of the outcome.
-    IF (vl_result IS NOT NULL AND vl_result_date IS NOT NULL AND DATEDIFF(NOW(), vl_result_date) < three_months) THEN
-        LEAVE sp;
-    END IF;
-
-    -- Remove all patients who are suppressed in the last 12 months, i.e VL result <=50 copies/mL.
-    IF (vl_result IS NOT NULL AND vl_result_date IS NOT NULL
-        AND DATEDIFF(NOW(), vl_result_date) < twelve_months
-        AND vl_copies <= vl_result_copies_suppressed) THEN
-        LEAVE sp;
-    END IF;
-
-    -- Remove all patients whose last VL was >51 copies/mL and the duration since their last VL is less than 90 days
-    IF (vl_result IS NOT NULL AND vl_result_date IS NOT NULL
-        AND DATEDIFF(NOW(), vl_result_date) < three_months
-        AND vl_copies <= 51) THEN
-        LEAVE sp;
-    END IF;
-
-    -- Remove breastfeeding mothers who:  within 90 days of delivery, they have a viral load result.
-    IF (DATEDIFF(NOW(), date_of_last_menstrual_period) < three_months) THEN
-        LEAVE sp;
-    END IF;
-
-
-    -- younger than 18months (remove pcr -ve at 6weeks)
-    IF (age < eighteen_months AND pediatrics_pcr_result = 'Negative') THEN
-        LEAVE sp;
-    END IF;
-
-    -- most recent VL done within 3months
-    IF (DATEDIFF(NOW(), recent_vl_date) < three_months) THEN
-        LEAVE sp;
-    END IF;
-
-    -- most recent VL done within 3months
-    IF (recent_vl_result < 1000 AND) THEN
-        LEAVE sp;
-    END IF;
-
-
-    -- Fetch the saved computed Obs Encounter Id for this Patient
-    SELECT e.encounter_id
-    INTO computed_obs_encounter_id
-    FROM encounter e
-    WHERE e.encounter_type = computed_obs_encounter_type
-      AND e.patient_id = patientid;
-
-    -- Create a new computed Obs Encounter for this patient
-    IF computed_obs_encounter_id IS NULL THEN
-
-        INSERT INTO encounter(encounter_type, patient_id, encounter_datetime, creator, date_created, uuid)
-        VALUES (computed_obs_encounter_type, patientid, NOW(), 1, NOW(), UUID());
-
-        -- Set the computed obs encounter id with the newly persisted computed Obs Encounter id
-        SELECT encounter_id
-        INTO computed_obs_encounter_id
-        FROM encounter e
-        WHERE encounter_type = computed_obs_encounter_type
-          AND e.patient_id = patientid
-        ORDER BY encounter_id DESC
-        LIMIT 1;
-
-    END IF;
-
-
-    -- Init hiv_tx_status_deceased
-    SELECT m.concept_id
-    INTO deceased
-    FROM mamba_obs_compute_metadata m
-    WHERE m.concept_label = 'hiv_tx_status_deceased';
-
-    -- This Patient already has a computed 'DECEASED' tx_status
-    IF (computed_obs_value_curr IS NOT NULL AND (computed_obs_value_curr = deceased)) THEN
-        LEAVE sp;
-    END IF;
-
-    -- Init hiv_tx_status_transferred_out
-    SELECT m.concept_id
-    INTO transfer_out
-    FROM mamba_obs_compute_metadata m
-    WHERE m.concept_label = 'hiv_tx_status_transferred_out';
-
-    -- Init hiv_tx_status_interrupted
-    SELECT m.concept_id
-    INTO interrupted
-    FROM mamba_obs_compute_metadata m
-    WHERE m.concept_label = 'hiv_tx_status_interrupted';
-
-    -- Fetch Date of Death for Patient
-    SELECT o.value_datetime
-    INTO death_date
-    FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'date_of_death'
-      AND o.person_id = patientid
-      AND o.value_datetime IS NOT NULL
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-    -- Fetch HIV Care Enrollment Date for Patient
-    SELECT o.value_datetime
-    INTO enrollment_date
-    FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'hiv_care_enrollment_date'
-      AND o.person_id = patientid
-      AND o.value_datetime IS NOT NULL
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-    -- Fetch HIV Care Re-Enrollment Date for Patient
-    SELECT o.value_datetime
-    INTO re_enrollment_date
-    FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'hiv_care_re_enrollment_date'
-      AND o.person_id = patientid
-      AND o.value_datetime IS NOT NULL
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-    -- Fetch Transfer-Out Date for Patient
-    SELECT o.value_datetime
-    INTO transfer_out_date
-    FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'date_transferred_out'
-      AND o.person_id = patientid
-      AND o.value_datetime IS NOT NULL
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-    -- Fetch Next Appointment Date for Patient
-    SELECT o.value_datetime
-    INTO next_appointment_date
-    FROM obs o
-             INNER JOIN mamba_obs_compute_metadata m ON o.concept_id = m.concept_id
-    WHERE m.concept_label = 'return_visit_date'
-      AND o.person_id = patientid
-      AND o.value_datetime IS NOT NULL
-    ORDER BY obs_id DESC
-    LIMIT 1;
-
-    -- Set 'DECEASED' if (HIV Enrolment date is not null && Date of death is not null)
-    IF (enrollment_date IS NOT NULL AND death_date IS NOT NULL) THEN
-        SET computed_obs_value_new = deceased;
-
-        -- Set 'Transfer-Out' if (HIV Enrolment date is not null && Transfer-Out Date is not null &&  Date of Re-enrolment < Transfer-Out Date)
-    ELSEIF (enrollment_date IS NOT NULL AND transfer_out_date IS NOT NULL) THEN
-        IF (DATEDIFF(re_enrollment_date, transfer_out_date) < 0) THEN
-            SET computed_obs_value_new = transfer_out;
-        END IF;
-
-        -- Set 'Tx Interrupted' if (HIV Enrolment date is not null && Reporting date >  (Next appointment + 28  days))
-    ELSEIF (enrollment_date IS NOT NULL) THEN
-        IF (DATEDIFF(NOW(), next_appointment_date) > lost_to_followup_duration) THEN
-            SET computed_obs_value_new = interrupted;
-        END IF;
-
-    END IF;
-
-    INSERT INTO TEMPO_TABLE (log_value)
-    VALUES (computed_obs_value_new);
 
     -- if no status is computed no need to proceed
     IF (computed_obs_value_new IS NULL) THEN
         LEAVE sp;
     END IF;
 
+    -- if similar status no need to proceed
+    IF (computed_obs_value_new = computed_obs_value_curr) THEN
+        LEAVE sp;
+    END IF;
+
+    -- if similar status no need to proceed
+    IF (computed_obs_value_curr = previously_known_hiv_positive AND computed_obs_value_new != hiv_positive) THEN
+        LEAVE sp;
+    END IF;
+
     -- Insert/Update computed Obs Status
     IF (computed_obs_value_curr IS NULL) THEN
+
+        -- Mother hiv status computed Obs
         INSERT INTO obs(date_created, obs_datetime, encounter_id, person_id, concept_id, value_coded, uuid, creator)
         VALUES (NOW(), NOW(), computed_obs_encounter_id, patientid, computed_obs_concept, computed_obs_value_new,
                 UUID(), 1);
+
+        -- ptracker Id
+        INSERT INTO obs(date_created, obs_datetime, encounter_id, person_id, concept_id, value_coded, uuid, creator)
+        VALUES (NOW(), NOW(), computed_obs_encounter_id, patientid, ptracker_id_concept, ptracker_id_value, UUID(), 1);
+
     ELSE
         UPDATE obs
         SET value_coded = computed_obs_value_new
