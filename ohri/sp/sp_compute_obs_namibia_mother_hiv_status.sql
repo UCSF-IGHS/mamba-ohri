@@ -79,18 +79,16 @@ BEGIN
     -- Create a new computed Obs Encounter for this patient (if none exists)
     IF computed_obs_encounter_id IS NULL THEN
 
-        INSERT INTO encounter(encounter_type, patient_id, encounter_datetime, creator, date_created, uuid)
-        VALUES (computed_obs_encounter_type, patientid, NOW(), 1, NOW(), UUID());
+        SET @encounter_uuid = UUID();
 
-        -- Set the computed obs encounter id with the newly persisted computed Obs Encounter id
-        SELECT DISTINCT (e.encounter_id)
+        INSERT INTO encounter(encounter_type, patient_id, encounter_datetime, creator, date_created, uuid)
+        VALUES (computed_obs_encounter_type, patientid, NOW(), 1, NOW(), @encounter_uuid);
+
+        -- Fetch the newly persisted encounter Id
+        SELECT encounter_id
         INTO computed_obs_encounter_id
-        FROM obs o
-                 INNER JOIN encounter e on o.encounter_id = e.encounter_id
-        WHERE e.encounter_type = computed_obs_encounter_type
-          AND e.patient_id = patientid
-          AND o.concept_id = ptracker_id_concept
-          AND o.value_text = ptracker_id_value;
+        FROM encounter
+        WHERE uuid = @encounter_uuid;
 
     END IF;
 
@@ -116,10 +114,10 @@ BEGIN
     INTO hiv_positive
     FROM mamba_obs_compute_metadata m
     WHERE m.concept_label = 'hiv_positive'
-      and m.obs_encounter_type_id = 0;
+      and m.obs_encounter_type_id IS NULL;
 
     -- This Patient already has a computed 'HIV Positive' computed_mother_hiv_status
-    IF (computed_obs_value_curr IS NOT NULL AND (computed_obs_value_curr = hiv_positive)) THEN
+    IF (computed_obs_value_curr = hiv_positive) THEN
         LEAVE sp;
     END IF;
 
@@ -128,49 +126,49 @@ BEGIN
     INTO previously_known_hiv_positive
     FROM mamba_obs_compute_metadata m
     WHERE m.concept_label = 'previously_known_hiv_positive'
-      and m.obs_encounter_type_id = 0;
+      and m.obs_encounter_type_id IS NULL;
 
     -- Init hiv_test_done_in_this_visit
     SELECT DISTINCT (m.concept_id)
     INTO hiv_test_done_in_this_visit
     FROM mamba_obs_compute_metadata m
     WHERE m.concept_label = 'hiv_test_done_in_this_visit'
-      and m.obs_encounter_type_id = 0;
+      and m.obs_encounter_type_id IS NULL;
 
     -- Init hiv_test_not_done_in_this_visit
     SELECT DISTINCT (m.concept_id)
     INTO hiv_test_not_done_in_this_visit
     FROM mamba_obs_compute_metadata m
     WHERE m.concept_label = 'hiv_test_not_done_in_this_visit'
-      and m.obs_encounter_type_id = 0;
+      and m.obs_encounter_type_id IS NULL;
 
     -- Init hiv_test_result
     SELECT DISTINCT (m.concept_id)
     INTO hiv_test_result
     FROM mamba_obs_compute_metadata m
     WHERE m.concept_label = 'hiv_test_result'
-      and m.obs_encounter_type_id = 0;
+      and m.obs_encounter_type_id IS NULL;
 
     -- Init hiv_status_unknown
     SELECT DISTINCT (m.concept_id)
     INTO hiv_status_unknown
     FROM mamba_obs_compute_metadata m
     WHERE m.concept_label = 'hiv_status_unknown'
-      and m.obs_encounter_type_id = 0;
+      and m.obs_encounter_type_id IS NULL;
 
     -- Init hiv_status_missing
     SELECT DISTINCT (m.concept_id)
     INTO hiv_status_missing
     FROM mamba_obs_compute_metadata m
     WHERE m.concept_label = 'hiv_status_missing'
-      and m.obs_encounter_type_id = 0;
+      and m.obs_encounter_type_id IS NULL;
 
     -- Init hiv_negative
     SELECT DISTINCT (m.concept_id)
     INTO hiv_negative
     FROM mamba_obs_compute_metadata m
     WHERE m.concept_label = 'hiv_negative'
-      and m.obs_encounter_type_id = 0;
+      and m.obs_encounter_type_id IS NULL;
 
     -- Fetch the Response to the HIV Test performed obs question in this Encounter
     SELECT o.value_coded
@@ -183,32 +181,27 @@ BEGIN
     LIMIT 1;
 
     -- Set 'UNKNOWN' if (Not tested for HIV during this visit)
-    IF (hiv_test_status_answer IS NOT NULL AND hiv_test_status_answer = hiv_test_not_done_in_this_visit) THEN
+    IF (hiv_test_status_answer = hiv_test_not_done_in_this_visit) THEN
         SET computed_obs_value_new = hiv_status_unknown;
     END IF;
 
     -- Set 'MISSING' if (Missing)
-    IF (hiv_test_status_answer IS NOT NULL AND hiv_test_status_answer = hiv_status_missing) THEN
+    IF (hiv_test_status_answer = hiv_status_missing) THEN
         SET computed_obs_value_new = hiv_status_missing;
     END IF;
 
     -- Set 'PREV. +VE' if (Previously known Positive)
-    IF (hiv_test_status_answer IS NOT NULL AND hiv_test_status_answer = previously_known_hiv_positive) THEN
+    IF (hiv_test_status_answer = previously_known_hiv_positive) THEN
         SET computed_obs_value_new = previously_known_hiv_positive;
     END IF;
 
-    -- if no status is computed no need to proceed
+    -- If no status is computed no need to proceed
     IF (computed_obs_value_new IS NULL) THEN
         LEAVE sp;
     END IF;
 
-    -- if similar status no need to proceed
+    -- If similar status no need to proceed
     IF (computed_obs_value_new = computed_obs_value_curr) THEN
-        LEAVE sp;
-    END IF;
-
-    -- if similar status no need to proceed
-    IF (computed_obs_value_curr = previously_known_hiv_positive AND computed_obs_value_new != hiv_positive) THEN
         LEAVE sp;
     END IF;
 

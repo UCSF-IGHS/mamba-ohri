@@ -14,7 +14,10 @@ BEGIN
 
     DECLARE done INT DEFAULT FALSE;
     DECLARE cursor_affected_computations CURSOR FOR
-        SELECT compute_procedure_name FROM mamba_obs_compute_metadata WHERE concept_id = obs_concept_id;
+        SELECT compute_procedure_name
+        FROM mamba_obs_compute_metadata
+        WHERE concept_id = obs_concept_id
+          AND compute_procedure_name IS NOT NULL;
 
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
