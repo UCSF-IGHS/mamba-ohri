@@ -218,7 +218,7 @@ BEGIN
                 UUID(), 1);
 
         -- ptracker Id
-        INSERT INTO obs(date_created, obs_datetime, encounter_id, person_id, concept_id, value_coded, uuid, creator)
+        INSERT INTO obs(date_created, obs_datetime, encounter_id, person_id, concept_id, value_text, uuid, creator)
         VALUES (NOW(), NOW(), computed_obs_encounter_id, patientid, ptracker_id_concept, ptracker_id_value, UUID(), 1);
 
     ELSE
