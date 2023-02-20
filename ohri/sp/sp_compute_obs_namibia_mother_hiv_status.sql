@@ -20,7 +20,7 @@ BEGIN
     DECLARE computed_obs_value_new INT;
 
     DECLARE ptracker_id_concept INT;
-    DECLARE ptracker_id_value INT;
+    DECLARE ptracker_id_value NVARCHAR(20);
 
     DECLARE hiv_positive INT;
     DECLARE hiv_negative INT;
@@ -64,7 +64,8 @@ BEGIN
     FROM obs o
     WHERE o.concept_id = ptracker_id_concept
       AND o.encounter_id = encounterid
-      AND o.person_id = patientid;
+      AND o.person_id = patientid
+      AND o.voided = 0;
 
     -- Fetch the saved computed Obs Encounter Id (for PMTCT computed obs Encounter type) for this Patient
     SELECT DISTINCT (e.encounter_id)
@@ -74,7 +75,8 @@ BEGIN
     WHERE e.encounter_type = computed_obs_encounter_type
       AND e.patient_id = patientid
       AND o.concept_id = ptracker_id_concept
-      AND o.value_text = ptracker_id_value;
+      AND o.value_text = ptracker_id_value
+      AND o.voided = 0;
 
     -- Create a new computed Obs Encounter for this patient (if none exists)
     IF computed_obs_encounter_id IS NULL THEN
@@ -106,6 +108,7 @@ BEGIN
       AND o.concept_id = computed_obs_concept
       AND o.person_id = patientid
       AND o.value_coded IS NOT NULL
+      AND o.voided = 0
     ORDER BY obs_id DESC
     LIMIT 1;
 
@@ -177,6 +180,7 @@ BEGIN
     WHERE o.concept_id = conceptid
       AND o.encounter_id = encounterid
       AND o.person_id = patientid
+      AND o.voided = 0
     ORDER BY obs_id DESC
     LIMIT 1;
 
